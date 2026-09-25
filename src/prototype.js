@@ -56,12 +56,26 @@ function VariantB(rows){return `<div class="browser-shell">${topbar()}<main clas
 function VariantC(rows){return `${topbar()}<main class="report-shell"><div class="report-masthead"><div class="eyebrow">MICRO BENCHMARK LAB / FIELD NOTES</div><span>实验档案 № 001 <b>2026.09</b></span></div><div class="report-hero"><div><span class="report-kicker">DATA MOVEMENT · A3 / A5</span><h1>一次搬运，<br>究竟能有多快<span>？</span></h1><p>沿着数据量，观察 DataCopy 从延迟主导到吞吐平台的变化。所有点均来自真实 NPU 测量。</p></div><aside><span class="eyebrow">本次档案</span><dl><dt>设备</dt><dd>A3 / Ascend950DT</dd><dt>测量接口</dt><dd>DataCopy(params)</dd><dt>配置轮次</dt><dd>1,900</dd><dt>原始计时样本</dt><dd>38,000</dd></dl><a href="${db.sources.A5}" target="_blank">打开 A5 回传证据 ↗</a></aside></div><div class="report-section-title"><span>01</span><h2>把条件对齐，再看曲线。</h2><small>交互式实验切片</small></div><div class="report-filters">${filters()}</div>${stats(rows)}${chartPanel()}<div class="report-note"><b>如何读这张图</b><p>每个点汇总同一设备、shape、循环数和工作集的重复测量。点选后可查看每轮 20 个原始样本。A3 与 A5 的 CANN 版本不同，曲线反映各自环境，不把差异单独归因于芯片。</p></div><div class="report-section-title"><span>02</span><h2>结论需要可以回到样本。</h2><small>记录与证据</small></div><div class="report-bottom">${tablePanel(rows)}${detailPanel()}</div><div class="report-footnotes">${environmentMini()}<div><div class="eyebrow">计时口径</div><p>循环区间总完成时间 ÷ 调用次数。包含地址计算、提交、等待与最终排空，未扣空循环；不是单个请求的尾延迟。</p><a href="${db.sources.A3}" target="_blank">A3 归档数据 ↗</a> <a href="${db.sources.A5}" target="_blank">A5 回传数据 ↗</a></div></div>${stateSummary()}</main>`;}
 function switcher(){return import.meta.env.DEV?`<div class="prototype-switcher"><span class="proto-label">PROTOTYPE</span><button data-cycle="-1" aria-label="上一个方案">←</button><div><b>${state.variant}</b><span>${variants[state.variant]}</span></div><button data-cycle="1" aria-label="下一个方案">→</button><span class="proto-dots">${['A','B','C'].map(v=>`<button data-variant="${v}" class="${v===state.variant?'on':''}" aria-label="方案 ${v}"></button>`).join('')}</span></div>`:'';}
 function render(){
+  // 替换页面和初始化图表期间保留文档高度，防止浏览器提前压缩滚动位置。
+  const root=document.querySelector('#app');
+  const viewport={x:window.scrollX,y:window.scrollY,minHeight:root.style.minHeight};
+  const tableScroll=document.querySelector('.table-scroll')?.scrollLeft||0;
+  const openDetails=[...document.querySelectorAll('details[open]')].map(d=>d.className);
+  const active=document.activeElement;
+  const focusSelector=active?.id?`#${CSS.escape(active.id)}`:
+    ['data-select','data-key','data-sort','data-row','data-page','data-cycle','data-variant','data-action'].filter(a=>active?.hasAttribute(a)).map(a=>`[${a}="${CSS.escape(active.getAttribute(a))}"]`).join('')+(active?.hasAttribute('data-value')?`[data-value="${CSS.escape(active.dataset.value)}"]`:'');
+  root.style.minHeight=`${root.offsetHeight}px`;
   charts.splice(0).forEach(c=>c.dispose());
   document.body.dataset.variant=state.variant;
   const rows=grouped(filtered());
   if(!rows.some(r=>r.members.some(m=>m.id===state.selected)))state.selected=rows.find(r=>r.device==='A5'&&r.bytes===32768)?.members[0].id||rows.at(-1)?.members[0].id||null;
-  document.querySelector('#app').innerHTML=({A:VariantA,B:VariantB,C:VariantC}[state.variant])(rows)+switcher();
+  root.innerHTML=({A:VariantA,B:VariantB,C:VariantC}[state.variant])(rows)+switcher();
   renderTable(rows);renderDetail();mountChart(rows);bind();
+  document.querySelectorAll('details').forEach(d=>{d.open=openDetails.includes(d.className);});
+  document.querySelector('.table-scroll').scrollLeft=tableScroll;
+  if(focusSelector)document.querySelector(focusSelector)?.focus({preventScroll:true});
+  root.style.minHeight=viewport.minHeight;
+  window.scrollTo({left:viewport.x,top:viewport.y,behavior:'instant'});
 }
 function renderTable(rows){
   rows=[...rows].sort((a,b)=>(state.sort==='device'?a.device.localeCompare(b.device):a[state.sort]-b[state.sort])*(state.descending?-1:1));
@@ -101,11 +115,12 @@ function bind(){
   document.querySelectorAll('[data-row]').forEach(b=>{b.onclick=()=>{state.selected=b.dataset.row;render();};b.onkeydown=e=>{if(e.key==='Enter')b.click();};});
   document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{state.page+=Number(b.dataset.page);render();});
   document.querySelectorAll('[data-cycle]').forEach(b=>b.onclick=()=>cycle(Number(b.dataset.cycle)));
-  document.querySelectorAll('[data-variant]').forEach(b=>b.onclick=()=>switchVariant(b.dataset.variant));
-  document.querySelector('#search').oninput=e=>{const pos=e.target.selectionStart;state.query=e.target.value;state.page=0;render();const s=document.querySelector('#search');s.focus();s.setSelectionRange(pos,pos);};
+  // body 也带 data-variant 用于样式，不能把它绑定成方案切换按钮。
+  document.querySelectorAll('button[data-variant]').forEach(b=>b.onclick=()=>switchVariant(b.dataset.variant));
+  document.querySelector('#search').oninput=e=>{const pos=e.target.selectionStart;state.query=e.target.value;state.page=0;render();const s=document.querySelector('#search');s.focus({preventScroll:true});s.setSelectionRange(pos,pos);};
   document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='reset'){Object.assign(state,{direction:'GM_UB',mode:'small',windows:2,batch:1,metric:'gbps',device:'both',timing:'long',query:'',page:0,zoom:[0,100]});render();}if(b.dataset.action.startsWith('zoom-')){const current=filtered();const min=Math.min(...current.map(r=>r.bytes));const max=2**Math.ceil(Math.log2(Math.max(...current.map(r=>r.bytes))));state.zoom=b.dataset.action==='zoom-large'&&current.length?[Math.max(0,(Math.max(min,Math.min(8192,max/4))-min)/(max-min)*100),100]:[0,100];echarts.getInstanceByDom(document.querySelector('#main-chart')).dispatchAction({type:'dataZoom',start:state.zoom[0],end:state.zoom[1]});echarts.getInstanceByDom(document.querySelector('#main-chart')).getZr().flush();echarts.getInstanceByDom(document.querySelector('#main-chart')).resize();}if(b.dataset.action==='csv')downloadCSV();if(b.dataset.action==='svg'){const c=echarts.getInstanceByDom(document.querySelector('#main-chart'));download(c.getDataURL({type:'svg',pixelRatio:2,backgroundColor:state.variant==='B'?'#17252c':'#fff'}),'datacopy-chart.svg');}});
 }
-function switchVariant(v){state.variant=v;const u=new URL(location.href);u.searchParams.set('variant',v);history.replaceState(null,'',u);render();window.scrollTo(0,0);}
+function switchVariant(v){state.variant=v;const u=new URL(location.href);u.searchParams.set('variant',v);history.replaceState(null,'',u);render();}
 function cycle(delta){const keys=['A','B','C'];switchVariant(keys[(keys.indexOf(state.variant)+delta+3)%3]);}
 document.addEventListener('keydown',e=>{if(!import.meta.env.DEV||e.target.closest('input,textarea,select,[contenteditable]'))return;if(e.key==='ArrowRight'){e.preventDefault();cycle(1);}if(e.key==='ArrowLeft'){e.preventDefault();cycle(-1);}});
 window.addEventListener('resize',()=>charts.forEach(c=>c.resize()));
