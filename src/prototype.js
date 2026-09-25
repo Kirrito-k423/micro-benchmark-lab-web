@@ -3,7 +3,7 @@
 import * as echarts from 'echarts';
 import './style.css';
 
-const db = await fetch('/data/datacopy.json').then(r => r.json());
+const db = await fetch(`${import.meta.env.BASE_URL}data/datacopy.json`).then(r => r.json());
 const params = new URLSearchParams(location.search);
 const state = { variant: ['A','B','C'].includes(params.get('variant')) ? params.get('variant') : 'A',
   direction:'GM_UB', mode:'small', windows:2, batch:1, metric:'gbps', device:'both', timing:'long',

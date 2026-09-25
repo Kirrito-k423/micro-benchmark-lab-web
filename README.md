@@ -4,6 +4,8 @@ AKL 实机测量结果的交互式浏览站点。先回答「哪个界面更适�
 
 当前处于 UI 原型阶段，根据用户反馈沿方案 A 继续迭代。三个候选位于 `codex/prototype-datacopy-lab` 分支，主分支不包含原型实现。
 
+公开预览：[Micro Benchmark Lab](https://kirrito-k423.github.io/micro-benchmark-lab-web/)。默认显示方案 A，保留数据筛选、图表和样本联动；公网构建隐藏原型切换条。
+
 数据来源：ascend-kernel-lab 的 A3 DataCopy 实测报告和 PR #33 的 A5 回传证据。展示有效 payload 吞吐、每调用完成耗时与原始样本；不同设备、CANN、同步方式和工作集分别标识。
 
 ## 运行原型
@@ -24,7 +26,13 @@ npm run prototype
 
 三个方案共用 Apache ECharts 图表与真实测量数据，支持方向、设备、工作集、窗口、batch、计时范围切换；曲线缩放、图例开关、点选、表格搜索与排序、逐轮 20 个样本、原始 tick、CSV / SVG 下载。选中表格行会更新样本面板。
 
-原型用于验证信息结构与交互，B/C 保留作为比较参考。`npm run build` 可检查构建，生产构建隐藏方案浮条。此分支不直接作为正式站点发布；确定方向后重新整理正式实现。
+原型用于验证信息结构与交互，B/C 保留作为比较参考。`npm run build` 可检查构建，生产构建隐藏方案浮条。用户要求将当前网页发布到公网，因此提供静态公开预览；正式实现仍待后续整理。
+
+## 发布公开预览
+
+运行 `npm ci` 后执行 `npm run build:pages`，生成带 `/micro-benchmark-lab-web/` 资源前缀的 `dist/`。数据请求同样使用该前缀，本地开发仍使用根路径。
+
+GitHub Pages 使用 `gh-pages` 分支根目录作为发布源。仅将 `dist/` 的内容（包含 `.nojekyll`）提交到该分支，等待仓库的 `pages build and deployment` 成功后检查公开地址。源码继续保存在 `codex/prototype-datacopy-lab`；修改源码分支不会自动发布，需重新构建并更新 `gh-pages`。
 
 ## 数据与边界
 

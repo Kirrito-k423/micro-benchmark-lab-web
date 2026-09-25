@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "prototype": "vite --host 127.0.0.1 --port 5183 --open /prototype/datacopy/",
-    "build": "vite build"
+    "build": "vite build",
+    "build:pages": "vite build --base=/micro-benchmark-lab-web/"
   },
   "dependencies": { "echarts": "^6.0.0" },
   "devDependencies": { "vite": "^7.0.0" }
