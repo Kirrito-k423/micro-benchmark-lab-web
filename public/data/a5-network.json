@@ -1,8 +1,409 @@
 {
   "schema": "akl.network.public.v1",
-  "status": "blocked_before_device_run",
+  "status": "single_host_smoke_validated_formal_queued",
   "date": "2026-10-09",
-  "rows": [],
+  "rows": [
+    {
+      "id": "be0e134fedc1bbda",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "get",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 4096,
+      "messageBytes": 4096,
+      "ringBytes": 4096,
+      "requestedWorksetBytes": 4096,
+      "operations": 128,
+      "movedBytes": 524288,
+      "control": false,
+      "eventMs": [
+        0.14944800734519958,
+        0.14677900075912476,
+        0.14552100002765656
+      ],
+      "warmupEventMs": [
+        1.0915420055389404
+      ],
+      "hostLaunchSyncUs": [
+        194.94,
+        193.29,
+        185.91
+      ],
+      "p50Us": 146.77900075912476,
+      "p95Us": 149.44800734519958,
+      "gbps": 3.571955097721339,
+      "coreTickDeltas": [
+        [
+          "139582"
+        ],
+        [
+          "139806"
+        ],
+        [
+          "139247"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    },
+    {
+      "id": "4697534680c96433",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "get",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 1048576,
+      "messageBytes": 1048576,
+      "ringBytes": 67108864,
+      "requestedWorksetBytes": 67108864,
+      "operations": 128,
+      "movedBytes": 134217728,
+      "control": false,
+      "eventMs": [
+        7.165319919586182,
+        7.166190147399902,
+        7.797743797302246
+      ],
+      "warmupEventMs": [
+        7.363798141479492
+      ],
+      "hostLaunchSyncUs": [
+        7220.37,
+        7217.93,
+        7850.11
+      ],
+      "p50Us": 7166.190147399902,
+      "p95Us": 7797.743797302246,
+      "gbps": 18.729300400813116,
+      "coreTickDeltas": [
+        [
+          "7148575"
+        ],
+        [
+          "7150459"
+        ],
+        [
+          "7781321"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    },
+    {
+      "id": "d49f03dd5d6bd2fd",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "put",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 32,
+      "messageBytes": 32,
+      "ringBytes": 32,
+      "requestedWorksetBytes": 32,
+      "operations": 128,
+      "movedBytes": 4096,
+      "control": false,
+      "eventMs": [
+        0.13810700178146362,
+        0.13658800721168518,
+        0.13526999950408936
+      ],
+      "warmupEventMs": [
+        0.14556699991226196
+      ],
+      "hostLaunchSyncUs": [
+        180.96,
+        180.24,
+        180.7
+      ],
+      "p50Us": 136.58800721168518,
+      "p95Us": 138.10700178146362,
+      "gbps": 0.02998799150537416,
+      "coreTickDeltas": [
+        [
+          "128040"
+        ],
+        [
+          "128120"
+        ],
+        [
+          "128148"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    },
+    {
+      "id": "76d98abc82a3b7ea",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "put",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 1048576,
+      "messageBytes": 1048576,
+      "ringBytes": 67108864,
+      "requestedWorksetBytes": 67108864,
+      "operations": 128,
+      "movedBytes": 134217728,
+      "control": false,
+      "eventMs": [
+        3.3053030967712402,
+        3.2998108863830566,
+        3.2953779697418213
+      ],
+      "warmupEventMs": [
+        3.295936107635498
+      ],
+      "hostLaunchSyncUs": [
+        3371.37,
+        3361.8,
+        3350.81
+      ],
+      "p50Us": 3299.8108863830566,
+      "p95Us": 3305.3030967712402,
+      "gbps": 40.674369720355976,
+      "coreTickDeltas": [
+        [
+          "3275684"
+        ],
+        [
+          "3275699"
+        ],
+        [
+          "3276108"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    },
+    {
+      "id": "8df59184d3971d3b",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "put",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 4096,
+      "messageBytes": 4096,
+      "ringBytes": 4096,
+      "requestedWorksetBytes": 4096,
+      "operations": 128,
+      "movedBytes": 524288,
+      "control": false,
+      "eventMs": [
+        0.15341800451278687,
+        0.1532990038394928,
+        0.15288099646568298
+      ],
+      "warmupEventMs": [
+        0.16345399618148804
+      ],
+      "hostLaunchSyncUs": [
+        196.33,
+        193.17,
+        193.2
+      ],
+      "p50Us": 153.2990038394928,
+      "p95Us": 153.41800451278687,
+      "gbps": 3.420035270085253,
+      "coreTickDeltas": [
+        [
+          "145377"
+        ],
+        [
+          "145348"
+        ],
+        [
+          "145442"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    },
+    {
+      "id": "cff2a9c97c645981",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "get",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 4096,
+      "messageBytes": 4096,
+      "ringBytes": 4096,
+      "requestedWorksetBytes": 4096,
+      "operations": 8192,
+      "movedBytes": 0,
+      "control": true,
+      "eventMs": [
+        0.24799999594688416,
+        0.24499200284481049,
+        0.245510995388031
+      ],
+      "warmupEventMs": [
+        0.24571600556373596
+      ],
+      "hostLaunchSyncUs": [
+        287.22,
+        282.71,
+        284.98
+      ],
+      "p50Us": 245.510995388031,
+      "p95Us": 247.99999594688416,
+      "gbps": 0.0,
+      "coreTickDeltas": [
+        [
+          "238443"
+        ],
+        [
+          "238444"
+        ],
+        [
+          "238433"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    },
+    {
+      "id": "9897d1b82ff9fa16",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "put",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 4096,
+      "messageBytes": 4096,
+      "ringBytes": 4096,
+      "requestedWorksetBytes": 4096,
+      "operations": 8192,
+      "movedBytes": 0,
+      "control": true,
+      "eventMs": [
+        0.2450679987668991,
+        0.244595006108284,
+        0.24484199285507202
+      ],
+      "warmupEventMs": [
+        0.24509599804878235
+      ],
+      "hostLaunchSyncUs": [
+        284.34,
+        283.11,
+        284.7
+      ],
+      "p50Us": 244.84199285507202,
+      "p95Us": 245.0679987668991,
+      "gbps": 0.0,
+      "coreTickDeltas": [
+        [
+          "238394"
+        ],
+        [
+          "238407"
+        ],
+        [
+          "238410"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    },
+    {
+      "id": "f56606451fa5cf8b",
+      "placement": "same_host",
+      "engine": "mte",
+      "operation": "get",
+      "cores": 1,
+      "batch": 1,
+      "qps": 1,
+      "configuredQps": 1,
+      "requestedBytes": 32,
+      "messageBytes": 32,
+      "ringBytes": 32,
+      "requestedWorksetBytes": 32,
+      "operations": 128,
+      "movedBytes": 4096,
+      "control": false,
+      "eventMs": [
+        0.19439099729061127,
+        0.19470100104808807,
+        0.19506500661373138
+      ],
+      "warmupEventMs": [
+        0.19460199773311615
+      ],
+      "hostLaunchSyncUs": [
+        233.49,
+        234.27,
+        234.42
+      ],
+      "p50Us": 194.70100104808807,
+      "p95Us": 195.06500661373138,
+      "gbps": 0.02103738541636133,
+      "coreTickDeltas": [
+        [
+          "187596"
+        ],
+        [
+          "187842"
+        ],
+        [
+          "188194"
+        ]
+      ],
+      "soc": "Ascend950DT_9582",
+      "binarySha256": "f473b93554b8d33af9ec629fd1eccef13990d17fed5dcef693a8c84bbe0ebfc2",
+      "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
+      "correctness": "both endpoints validated every launch",
+      "fabricExclusive": false,
+      "phase": "smoke"
+    }
+  ],
   "plans": [
     {
       "engine": "mte",
@@ -2794,21 +3195,34 @@
       "mte": 84,
       "urma": 148
     },
-    "rawTimedSamples": 0,
+    "rawTimedSamples": 24,
     "compiled": true,
-    "deviceCorrectness": false,
-    "topologyConfirmed": false,
-    "occupancyGate": "两次冒烟任务均在启动前发现其他 NPU 进程，未启动测试 rank",
+    "deviceCorrectness": "single-host smoke only",
+    "topologyConfirmed": "same host only",
+    "occupancyGate": "单机两 NPU 的 PUT/GET 冒烟通过：8 配置，24 计时样本和 8 预热；每次双端源、目标及保护区完整校验。正式矩阵仍在排队。",
     "fabricExclusive": false,
     "missingTopologies": [
       "same_cabinet",
       "cross_cabinet"
     ],
-    "timing": "发起方 ACL Event 包含传输完成；不相加 rank 峰值"
+    "timing": "initiator ACL Event through quiet completion; not sum of rank peaks",
+    "libSha256": "5b594f7a9e68a364a93e49652adee515a7eb721ad0f11b923ccd2feea1322d52",
+    "sourceSha256": {
+      "src/main.cpp": "95789e38ae17214b2d2eee952152e24814681254f395a9f6ad899011c9063596",
+      "src/kernel.cpp": "79435f3f8ea21ec50ccdb31926300430f71e530f9dc2f041e182bbea2140291d",
+      "src/CMakeLists.txt": "97447e08ba67d5c87612df382a0b991fe6047117827a1ea76b0ca849919eecf0",
+      "src/run_pair.py": "86dd1a04ee1778743fe03f0c2d855628bccabb55f2bcd4d313e0a2d7c357273b",
+      "src/plan.py": "79041108e0f2f3c950f692069465f6fe2ef8cca10f282deb83bc6400f7fae944",
+      "src/import_results.py": "ef76157471f07eeb8ed01ad6d0cfe998f0a06fe0a8b323fc941a71af0efd371f",
+      "src/make_receipt.py": "5d1a619c84761086148ae1365c986add4d008b27879ded082ba166bb0c456e51"
+    },
+    "endpointOracle": "entire source, destination and 128B guards on both endpoints",
+    "queued": true,
+    "checkIntervalMinutes": 15
   },
   "blockers": [
-    "借用 A5 的空闲窗口已结束；探测过的 B07 节点有 NPU 进程，B05/B06 不可调度",
-    "两端机柜、计算板与链路路径映射尚未确认"
+    "正式扫描按空闲窗口排队：先单机 FullMesh/MTE，随后多机 URMA",
+    "多机设备对的机柜、板号与路径仍待确认；已测同机设备对不代表全柜带宽"
   ],
   "stages": [
     {
@@ -2820,12 +3234,12 @@
       "status": "通过"
     },
     {
-      "name": "双端正确性与性能采样",
-      "status": "待空闲窗口"
+      "name": "单机两卡冒烟",
+      "status": "8 配置通过"
     },
     {
-      "name": "机柜与路径确认",
-      "status": "待证据"
+      "name": "正式扫描 / 多机 URMA",
+      "status": "顺序排队"
     }
   ]
 }
