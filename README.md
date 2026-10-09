@@ -81,3 +81,16 @@ python3 scripts/import-evidence.py --a3 /path/to/points.csv --a5 /path/to/a5-web
 数据目录包含 `a5-datacopy/` 与 `a5-datacopy-w1/` 两个解压目录。原型导入器只覆盖本次归档，不代表正式的通用上传协议。
 
 图表实现参考 [Apache ECharts dataset 文档](https://echarts.apache.org/handbook/en/concepts/dataset/)；依赖版本由 lockfile 固定。
+
+## A5 SIMD / REG 同工作量对照
+
+[新页面](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=simd) 提供 10 个批量 shape 与尾块、四种 FP32 运算、Tensor API / REG 1/4 组 / SIMT 五档线程对照。支持 shape/依赖链横轴，完成耗时/有效 Gop/s/相对 Tensor API 速度比，图例开关、原始样本联动、轮次筛选与 CSV。1588 配置 × 两轮、47640 计时样本通过验收。
+
+[实测报告](reports/a5-simd-20261009.md) · [代码与 SOP](https://github.com/Kirrito-k423/ascend-kernel-lab/tree/codex/a5-alignment-simt/examples/a5_simd_mbench)。公开数据 `public/data/a5-simd.json` 独立保留本轮二进制；旧曲线仍在原入口。
+
+```bash
+python3 scripts/import-a5-simd.py --runs /absolute/private/raw --akl-root /absolute/akl --output public/data/a5-simd.json
+python3 scripts/report-a5-simd.py --data public/data/a5-simd.json --report reports/a5-simd-20261009.md --figures public/figures
+```
+
+导入器要求完整两轮、固定矩阵、源码/构建/样本哈希、全部输出验证和短批次前后占用证据；缺失任一项就拒绝导出。报告与 PNG/SVG 均从验收 JSON 重新计算。
