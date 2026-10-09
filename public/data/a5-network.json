@@ -1,6 +1,6 @@
 {
   "schema": "akl.network.public.v1",
-  "status": "mte_formal_validated_urma_smoke_validated_shared_cq_mismatch",
+  "status": "mte_formal_validated_urma_smoke_validated_core_completion_fix_validated",
   "date": "2026-10-10",
   "rows": [
     {
@@ -51,7 +51,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "4697534680c96433",
@@ -101,7 +102,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "d49f03dd5d6bd2fd",
@@ -151,7 +153,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "76d98abc82a3b7ea",
@@ -201,7 +204,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "8df59184d3971d3b",
@@ -251,7 +255,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "cff2a9c97c645981",
@@ -301,7 +306,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "9897d1b82ff9fa16",
@@ -351,7 +357,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "f56606451fa5cf8b",
@@ -401,7 +408,8 @@
       "planSha256": "b6d267f7a46997f8d63858f26a2858117e2e465d6fcee3a88678393bd22d09a2",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "4b5cee23baff4380",
@@ -469,7 +477,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "7132dc919050745e",
@@ -537,7 +546,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "ff452257334e6ab9",
@@ -695,7 +705,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "a5112e43552ae119",
@@ -769,7 +780,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "bd6775551a48fe47",
@@ -837,7 +849,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "e75f752d4ee05d4e",
@@ -905,7 +918,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "a781e64993a92956",
@@ -1255,7 +1269,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "60eecf674f59bb66",
@@ -1341,7 +1356,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "dc9587520482878d",
@@ -1451,7 +1467,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "ffa539b5748d9f65",
@@ -1519,7 +1536,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "91007ada4b7ddabe",
@@ -1587,7 +1605,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "7fbc64f96672a10f",
@@ -2033,7 +2052,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "95e0fa68ed92924b",
@@ -2107,7 +2127,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "10cb320c735bb9c8",
@@ -2265,7 +2286,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "e84ca22bf370ceb9",
@@ -2333,7 +2355,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "a3065daa0de0993e",
@@ -2587,7 +2610,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "0e6689be65896319",
@@ -2655,7 +2679,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "8f37b936bffaf44c",
@@ -2813,7 +2838,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "71a12f4b8a070b64",
@@ -2881,7 +2907,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "2401210c965187c4",
@@ -2949,7 +2976,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "f90899d52284eab9",
@@ -3017,7 +3045,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "c655af5d38d8a47c",
@@ -3463,7 +3492,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "7ae1a861caea8e68",
@@ -3531,7 +3561,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "1762bb52dbf19b7b",
@@ -3641,7 +3672,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "e965f1e5d7e0621d",
@@ -3709,7 +3741,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "5dc9230707f66080",
@@ -3777,7 +3810,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "b89dc54f92840ab3",
@@ -4031,7 +4065,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "641c141c178817de",
@@ -4099,7 +4134,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "427160499221f30f",
@@ -4185,7 +4221,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "85883c219cd51545",
@@ -4253,7 +4290,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "a0e0da4030348830",
@@ -4699,7 +4737,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "4b86568cdce0f312",
@@ -4773,7 +4812,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "b130834a8f837a61",
@@ -5219,7 +5259,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "9ce41f6c4fc9e45a",
@@ -5293,7 +5334,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "b67fee4d63191716",
@@ -5379,7 +5421,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "f8127cbd5a95ac9a",
@@ -5489,7 +5532,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "108773fee4139b76",
@@ -5557,7 +5601,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "771f94f9af0936b7",
@@ -5625,7 +5670,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "6bd0095e68bffa1a",
@@ -5879,7 +5925,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "7ce4b24f3d29e05f",
@@ -5947,7 +5994,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "ca8feccc35021943",
@@ -6393,7 +6441,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "b4b17a378ef4da56",
@@ -6647,7 +6696,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "42959bb65d05d767",
@@ -6715,7 +6765,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "9dbc9e9c750fc335",
@@ -6789,7 +6840,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "74974806d1e8edd5",
@@ -6875,7 +6927,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "bff9e64059e52b6d",
@@ -6943,7 +6996,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "d5fcbda3d7b9b37b",
@@ -7011,7 +7065,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "31ab22f1439dc31b",
@@ -7169,7 +7224,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "f6d13d11bf4ad119",
@@ -7237,7 +7293,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "0a2582e53595e0df",
@@ -7587,7 +7644,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "0d302ea6e8dbd61c",
@@ -7655,7 +7713,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "57f1b3052c12f8fa",
@@ -7741,7 +7800,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "e11b548a218cc684",
@@ -8091,7 +8151,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "bac659c6704753fe",
@@ -8165,7 +8226,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "c901b6d2e38371aa",
@@ -8233,7 +8295,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "bdffce7c1db312ea",
@@ -8391,7 +8454,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "6c773dd595c9eb49",
@@ -8459,7 +8523,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "085f05a5df8b2afd",
@@ -8527,7 +8592,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "b2319d53ade89276",
@@ -8973,7 +9039,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "ef883b95e05cdb2c",
@@ -9041,7 +9108,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "13042d4e3d34d3a8",
@@ -9109,7 +9177,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "1661d05c4994da93",
@@ -9177,7 +9246,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "72ad48b7d8896cf6",
@@ -9245,7 +9315,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "f8d167ea88968f66",
@@ -9313,7 +9384,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "2961a6e46999824d",
@@ -9567,7 +9639,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "1bd68d7b5c60b673",
@@ -9917,7 +9990,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "91f8d4a8c9fbc84c",
@@ -9985,7 +10059,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "80267674c25bf0ab",
@@ -10095,7 +10170,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "9002c08f2cc6524a",
@@ -10253,7 +10329,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "cc259aeb53a61b3d",
@@ -10507,7 +10584,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "60b9ab1805b96f6d",
@@ -10575,7 +10653,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "e5a4471e0a372da6",
@@ -10643,7 +10722,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "86df92d6deb6c99e",
@@ -10711,7 +10791,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "f7a2ed90a151b290",
@@ -10797,7 +10878,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "2957058f4bc74153",
@@ -10907,7 +10989,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "cc1e433c102d8fa0",
@@ -11257,7 +11340,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "370be38efc184226",
@@ -11325,7 +11409,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "d4304d9c535cab02",
@@ -11393,7 +11478,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "79c1150ca226f065",
@@ -11461,7 +11547,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "8a55dbcfdc0e6643",
@@ -11529,7 +11616,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "e3d4eb65064f53d2",
@@ -11879,7 +11967,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "2ee147b3706421e7",
@@ -11947,7 +12036,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "3ac91c293747fba5",
@@ -12057,7 +12147,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "5312017bcad5f135",
@@ -12125,7 +12216,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 1,
-      "orderSeed": 20261010
+      "orderSeed": 20261010,
+      "completionImpl": "sdk"
     },
     {
       "id": "e8cf94686b3cde97",
@@ -12571,7 +12663,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "0a6b8926c31732ed",
@@ -12729,7 +12822,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "0b30baa4cbd53376",
@@ -12983,7 +13077,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "ccd227a8cb0e0438",
@@ -13333,7 +13428,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "8b3fa202c2385085",
@@ -13401,7 +13497,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "f81ba3224f96ca8e",
@@ -13469,7 +13566,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "db106844937ff970",
@@ -13723,7 +13821,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "208c637d48ed82d0",
@@ -13791,7 +13890,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "6246e1be54b52e01",
@@ -13859,7 +13959,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "edc4b8790d279506",
@@ -13927,7 +14028,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "438055aa7b553688",
@@ -13995,7 +14097,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "f7ead23de9da20d8",
@@ -14063,7 +14166,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "3127fbf6dae17218",
@@ -14137,7 +14241,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "b43f9d3243ec6137",
@@ -14205,7 +14310,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "983763a4c9ad944b",
@@ -14273,7 +14379,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "628a7de281f7c1bf",
@@ -14383,7 +14490,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "1a5d742ca47c1cf8",
@@ -14451,7 +14559,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "bd526dbb63832d1e",
@@ -14519,7 +14628,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "aa217e03ba1288ef",
@@ -14629,7 +14739,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "9479a3a55184de07",
@@ -14697,7 +14808,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "cd11c04fe623005e",
@@ -14951,7 +15063,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "3f02f5301cd08ed2",
@@ -15019,7 +15132,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "97b7cc3ba48996a4",
@@ -15087,7 +15201,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "ca721c6f9d2f2fb3",
@@ -15437,7 +15552,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "d0b2618199759a4a",
@@ -15883,7 +15999,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "f4dc461fbc31c0aa",
@@ -15951,7 +16068,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "6427edb603777276",
@@ -16061,7 +16179,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "daaa5d0ec2a5b8bb",
@@ -16129,7 +16248,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "8b4e1b8e3e0786d3",
@@ -16287,7 +16407,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "53ee43c16037703b",
@@ -16541,7 +16662,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "af6e69b07dcda3e2",
@@ -16891,7 +17013,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "07b2c5f3d52b06c6",
@@ -16959,7 +17082,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "917a8dd13209b0bb",
@@ -17033,7 +17157,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "8aa6bc62121185f4",
@@ -17107,7 +17232,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "1c6297ac80522676",
@@ -17175,7 +17301,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "9551a4383dd086ee",
@@ -17249,7 +17376,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "c24e394b0dee8281",
@@ -17407,7 +17535,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "b573c9960c929f3d",
@@ -17493,7 +17622,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "fc8699aabce6095e",
@@ -17651,7 +17781,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "ec38578fb2305d7d",
@@ -18097,7 +18228,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "4020f8a8f49a46bb",
@@ -18183,7 +18315,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "349a330b7452dba8",
@@ -18251,7 +18384,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "3e7d5e6dd9db28b3",
@@ -18319,7 +18453,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "c8c0e84407e7b9fc",
@@ -18669,7 +18804,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "26c678abe8aa3784",
@@ -18737,7 +18873,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "d2959bb2b0c2d9a9",
@@ -18805,7 +18942,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "f255af87b7113cf4",
@@ -19251,7 +19389,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "6e76a688ad4741f0",
@@ -19319,7 +19458,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "d24c5558d343a4c7",
@@ -19387,7 +19527,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "2471066c02664df9",
@@ -19497,7 +19638,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "64abce4891507cbd",
@@ -19751,7 +19893,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "3aef849131f3c01d",
@@ -20197,7 +20340,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "6a53790103a76d29",
@@ -20283,7 +20427,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "5673d6f51c33fd7a",
@@ -20351,7 +20496,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "84bfa09121555540",
@@ -20701,7 +20847,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "26f8514a5dedfe9d",
@@ -20769,7 +20916,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "f62f2da868116670",
@@ -21119,7 +21267,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "b7444e471fd894bf",
@@ -21373,7 +21522,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "5abc722d7ec343a2",
@@ -21459,7 +21609,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "3b73b8c0eb38cbe7",
@@ -21527,7 +21678,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "48c1a3c62bdd1f67",
@@ -21595,7 +21747,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "6f041a4b47238b4f",
@@ -21753,7 +21906,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "df35952315270fa5",
@@ -21821,7 +21975,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "fd366a5e774db80e",
@@ -21889,7 +22044,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "5c2046e9915dddd1",
@@ -22047,7 +22203,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "fb167f74011e483e",
@@ -22157,7 +22314,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "868835310c75ffce",
@@ -22225,7 +22383,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "e6c6c96a71ffad33",
@@ -22293,7 +22452,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "9a0ff9dd9ac6f760",
@@ -22361,7 +22521,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "5afbfa17eab42937",
@@ -22429,7 +22590,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "fae86692b64adefd",
@@ -22875,7 +23037,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "9c6a3badf1df27f3",
@@ -22949,7 +23112,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "f220ce353ffa8547",
@@ -23017,7 +23181,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "d529266a3388a19a",
@@ -23085,7 +23250,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "645e9863932b96bb",
@@ -23153,7 +23319,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "b6bbb70aec4890e6",
@@ -23227,7 +23394,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "51c8aa475b30dd51",
@@ -23295,7 +23463,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "b01986079381be28",
@@ -23363,7 +23532,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "6003a7e7ddf24df8",
@@ -23431,7 +23601,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "c99c6725437e4b6a",
@@ -23517,7 +23688,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "785569e429e2a027",
@@ -23585,7 +23757,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "570a91ba5467e640",
@@ -23695,7 +23868,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "1ab46753d62f055b",
@@ -23763,7 +23937,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "8fe831858cdfd908",
@@ -23849,7 +24024,8 @@
       "fabricExclusive": false,
       "phase": "formal",
       "round": 2,
-      "orderSeed": 20261011
+      "orderSeed": 20261011,
+      "completionImpl": "sdk"
     },
     {
       "id": "e0ce86a1c643c4da",
@@ -23899,7 +24075,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "6ee0615a17e3ad03",
@@ -23949,7 +24126,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "b35355c3ed619eac",
@@ -23999,7 +24177,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "6a6aab2bceea70f8",
@@ -24049,7 +24228,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "4061d6e9018979f8",
@@ -24099,7 +24279,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "2fd4c4b24c32bcd5",
@@ -24149,7 +24330,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "c16fc3cdfd0c0f80",
@@ -24199,7 +24381,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "bdadc05241681dfa",
@@ -24249,7 +24432,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "a71ac20d04f95470",
@@ -24299,7 +24483,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "a9f327131381800b",
@@ -24349,7 +24534,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "3c46d0b2ce59283e",
@@ -24399,7 +24585,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "c1beacb282a77ca8",
@@ -24449,7 +24636,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "5d118a4abf026950",
@@ -24499,7 +24687,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     },
     {
       "id": "01b43e356c238c5b",
@@ -24549,7 +24738,8 @@
       "planSha256": "b4fb0d3eb727d3adad0ec7a6fb4daf56bef54744726fd735475e1d7b288b4a66",
       "correctness": "both endpoints validated every launch",
       "fabricExclusive": false,
-      "phase": "smoke"
+      "phase": "smoke",
+      "completionImpl": "sdk"
     }
   ],
   "plans": [
@@ -27379,7 +27569,7 @@
     },
     "urmaSmokeConfigs": 14,
     "urmaSmokeTimedSamples": 42,
-    "urmaFormalStatus": "Formal acceptance remains zero: 8 independent SQs alias 2 CQs on both endpoints; per-QP quiet completion accounting mismatches shared CQ identity",
+    "urmaFormalStatus": "Explicit uninstrumented shared-CQ completion adapter validated; formal148x2 scanning with fixed configured8 QPs; no formal performance published yet",
     "urmaDiagnostic": {
       "cleanControls": [
         "1QP/256MiB",
@@ -27414,15 +27604,34 @@
       ],
       "bothEndpointsConfirmed": true,
       "quietReportedErrors": false,
-      "repairValidated": false,
-      "diagnosticPerformancePublished": false
+      "repairValidated": true,
+      "diagnosticPerformancePublished": false,
+      "SDKModified": false,
+      "completionImplementation": "cq-grouped, single AIV exclusively owns peer; SDK mode retained",
+      "uninstrumentedRegressionConfigs": 8,
+      "uninstrumentedRegressionLaunches": 64,
+      "regressionCoverage": [
+        "original GET256MiB",
+        "mixed PUT->GET",
+        "SQ/CQ wraps with used1/2/4/8 and configured8",
+        "actual configured1 SDK native",
+        "actual configured2 independent-CQ fallback"
+      ]
+    },
+    "coreCompletionBuild": {
+      "sourceCommit": "8053b0f67c8c36edad6c1e98ede76a3e2a89b4ab",
+      "binarySha256": "a06ecd554cde344f4c2df6650719851da2796c7905c411928515b324a1c3c409",
+      "fingerprintsSha256": "f11e94ee0d06591ded7aff5f1be25289750aba7b740b75b77a638a7246bc6830",
+      "SDKAndLibrariesUnchanged": true,
+      "diagnosticInstrumentation": false,
+      "MteRegressionLaunches": 64,
+      "performancePublished": false
     }
   },
   "blockers": [
-    "URMA 正式扫描未验收：双端 8 个 QP 实际共用 2 个 CQ（0/2/4/6、1/3/5/7），与逐 QP quiet 的独立完成计数不匹配；原失败配置留下 16MiB 初始化值。待修复并复验，失败及诊断性能不发布。",
+    "URMA 共享 CQ 完成适配已通过未插桩双端回归；正式 148 配置两轮尚未完整验收。正式测量固定配置 8 个 QP，分别使用 1/2/4/8 个；默认 SDK 与 cq-grouped 适配的性能分开标记。",
     "同机实际链路层级、多机机柜及板号仍待核对；当前结果不能代表全柜或跨柜带宽",
-    "小消息跨轮波动明显：PUT 1KiB 的两轮吞吐为 0.916 / 1.778 GB/s，原因待查，保留全部样本，不取快轮替代",
-    "1 QP 对照完成双端正确性检查，但结束时发现其他 NPU 进程，按门限拒收性能，本轮退出"
+    "小消息跨轮波动明显：PUT 1KiB 的两轮吞吐为 0.916 / 1.778 GB/s，原因待查，保留全部样本，不取快轮替代"
   ],
   "stages": [
     {
@@ -27439,9 +27648,9 @@
     },
     {
       "name": "两节点 URMA",
-      "status": "14 冒烟配置通过 · 等空闲排障"
+      "status": "14 冒烟配置 · 修复回归通过 · 正式扫描中"
     }
   ],
-  "displayStatus": "同机正式扫描通过 · 节点间 URMA 冒烟通过",
-  "scopeNote": "同机 MTE 已测 84 配置两轮、1～64 AIV、32B～16MiB；节点间 URMA 只有 14 个冒烟配置通过，正式多 QP 扫描待验证共享 CQ 的完成等待修复。实际链路层级、机柜与 X/Y 轴尚未确认；全柜聚合和双向压力未完成，当前最高点不是硬件上限。"
+  "displayStatus": "同机正式扫描通过 · URMA 共享 CQ 适配回归通过",
+  "scopeNote": "同机 MTE 已测 84 配置两轮、1～64 AIV、32B～16MiB；节点间 URMA 只有 14 个冒烟配置通过，共享 CQ 完成适配已通过回归，正式多 QP 扫描尚未完整验收。实际链路层级、机柜与 X/Y 轴尚未确认；全柜聚合和双向压力未完成，当前最高点不是硬件上限。"
 }
