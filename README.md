@@ -1,8 +1,8 @@
 # micro-benchmark-lab-web
 
-AKL 实机测量结果的交互式浏览站点。先回答「哪个界面更适合比较带条件的接口性能」，再实现正式网站。
+AKL 实机测量结果的交互式浏览站点。按实验条件比较接口完成耗时与有效吞吐，并逐点查看原始计时证据。
 
-当前处于 UI 原型阶段，根据用户反馈沿方案 A 继续迭代。三个候选位于 `codex/prototype-datacopy-lab` 分支，主分支不包含原型实现。
+沿方案 A 继续迭代；B/C 保留作为布局比较。新增实验位于 `codex/a5-mbench-results` 分支，主分支不包含网页实现。
 
 公开预览：[Micro Benchmark Lab](https://kirrito-k423.github.io/micro-benchmark-lab-web/)。默认显示方案 A，保留数据筛选、图表和样本联动；公网构建隐藏原型切换条。
 
@@ -28,11 +28,37 @@ npm run prototype
 
 原型用于验证信息结构与交互，B/C 保留作为比较参考。`npm run build` 可检查构建，生产构建隐藏方案浮条。用户要求将当前网页发布到公网，因此提供静态公开预览；正式实现仍待后续整理。
 
+## A5 长度对齐、SIMT 算术与 VF 开销
+
+新增三个独立入口，共用 ECharts 曲线、实测表格与原始样本联动：
+
+- [DataCopy 对齐](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=alignment)：默认显示固定 GM 缓冲的 15 个边界长度复验；另保留 uint8/FP32 的 127–257 元素完整扫描。方向、单/双窗口、地址偏移、延迟/吞吐和轮次分别筛选；DataCopyPad 与 DataCopy(params) 分线。
+- [SIMT 算术](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=simt)：FP32 加减乘除；32/128/512/2048/8192 元素，1/16/128 次依赖链，1–2048 的十档线程数。对照同工作量 Scalar/SIMD，切换总耗时或速度比。
+- [VF 调用开销](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=overhead)：1/16/64/128 次调用；原始每次完成时间与相对无 VF 同步循环的增量分别展示。每线程一次可观察 UB 写出仍在计时内，不能视为纯线程创建时间。
+
+这组数据使用 CANN 9.1.0，原容量曲线的 A5 数据使用 CANN 9.2.0，两组实验条件应分别看待。双窗口平均完成耗时不等于独立请求尾延迟；SIMT 寄存器依赖链与 SIMD Tensor API 每轮 UB 读写/同步的差异包含在速度比中。
+
+2026-10-09 完成并通过接收端校验：1496×2 个全量 DataCopy、60×2 个固定分配复验、764×2 个 SIMT 配置轮次，共 60264 个正式计时样本。[实测报告](reports/a5-mbench-20261009.md) 保留精确参数与对照数值。固定分配复验的两轮差异中位数 3.359%，全量扫描为 7.654%，SIMT 为 0.002%；小幅变化不能忽略这些波动。
+
+接收端导入再次检查预定矩阵、两轮覆盖、样本数、正确性、短批次结束占用检查和源码/构建哈希。两个方向均保留输出保护区验证。仅接受完整三组矩阵作为正式发布；部分结果只能本地预览。
+
+```bash
+python3 scripts/import-a5-mbench.py \
+  --runs /path/to/collected-formal-results \
+  --setup /path/to/setup \
+  --akl-root /path/to/ascend-kernel-lab \
+  --output public/data/a5-mbench.json
+python3 scripts/summarize-a5-mbench.py
+uv run --no-project --with matplotlib==3.11.2 python scripts/plot-a5-mbench.py
+```
+
+导入器需要 NumPy 和对应 AKL Python 源码。公开 JSON 包含参数、tick、p50/p95、正确性和证据哈希；设备地址、SSH 配置和完整进程日志不公开。实验报告由完整数据生成到 `reports/a5-mbench-20261009.md`。
+
 ## 发布公开预览
 
 运行 `npm ci` 后执行 `npm run build:pages`，生成带 `/micro-benchmark-lab-web/` 资源前缀的 `dist/`。数据请求同样使用该前缀，本地开发仍使用根路径。
 
-GitHub Pages 使用 `gh-pages` 分支根目录作为发布源。仅将 `dist/` 的内容（包含 `.nojekyll`）提交到该分支，等待仓库的 `pages build and deployment` 成功后检查公开地址。源码继续保存在 `codex/prototype-datacopy-lab`；修改源码分支不会自动发布，需重新构建并更新 `gh-pages`。
+GitHub Pages 使用 `gh-pages` 分支根目录作为发布源。仅将 `dist/` 的内容（包含 `.nojekyll`）提交到该分支，等待仓库的 `pages build and deployment` 成功后检查公开地址。源码保存在 `codex/a5-mbench-results`；修改源码分支不会自动发布，需重新构建并更新 `gh-pages`。
 
 ## 数据与边界
 
