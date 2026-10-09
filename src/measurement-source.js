@@ -92,8 +92,8 @@ export function implementationContext(family,r,db) {
     const operation=family==='overhead'?(r.impl===3?'UB 写出':'空同步'):['加','减','乘','除'][r.op];
     params.push(['实现 / 运算',`${names[r.impl]} / ${operation}`],['FP32 元素 / 每元素步数',`${r.elements} / ${r.steps}`],['AIV / SIMT 线程',`1 / ${threadsApplicable?r.threads:'不适用'}`]);
     if(family!=='simd')params.push(['循环调用 / 实际 SIMT VF',`${r.vf_calls} / ${r.actualSimtVfCalls}`]);
-    timing='GM 输入完成后读 SYS_CNT，执行所选实现并等待完成，再读 SYS_CNT。GM 输入与结果导出不在这段计时内；VF 调度和实现自己的同步在内。';
-    notes=[r.impl===1?'SIMT 用 i = threadIdx.x; i < n; i += Threads；一个线程可以循环处理多个元素。':family==='simd'&&r.impl>=2?'REG 在寄存器保留依赖链；4 组路径每批有四条独立向量链，尾部走掩码路径。':r.impl===0&&family!=='simd'?'Scalar 逐元素在标量寄存器中计算，UB 读写在所选计时内。':'Tensor API 每轮读写 UB 并执行 PIPE_V。','各实现的存储和同步成本不同，速度比是该实现的完成耗时对照。'];
+    timing='GM 输入完成后读 SYS_CNT，执行所选实现，再读 SYS_CNT。GM 输入与结果导出不在这段计时内；Vector / VF 路径的完成等待、VF 调度和实现自己的同步在内。';
+    notes=[r.impl===1?'SIMT 用 i = threadIdx.x; i < n; i += Threads；一个线程可以循环处理多个元素。':family==='simd'&&r.impl>=2?(r.impl===3?'REG 在寄存器保留依赖链，每批四条独立向量链；尾部走掩码路径。':'REG 每批一条寄存器向量依赖链；尾部走掩码路径。'):r.impl===0&&family!=='simd'?'Scalar 逐元素在标量寄存器中计算，UB 读写在所选计时内。':'Tensor API 每轮读写 UB 并执行 PIPE_V。','各实现的存储和同步成本不同，速度比是该实现的完成耗时对照。'];
     if(family==='overhead')notes=['Touch VF 每线程执行一次可观察 UB 写入，每调用都等待完成；增量包含这些成本，不能解释成纯线程创建开销。'];
   }
   return {params:params.filter(([,v])=>v!==undefined),timing,notes};
