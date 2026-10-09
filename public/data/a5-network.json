@@ -1,7 +1,7 @@
 {
   "schema": "akl.network.public.v1",
-  "status": "mte_formal_validated_urma_smoke_validated_diagnosing",
-  "date": "2026-10-10（Asia/Shanghai）",
+  "status": "mte_formal_validated_urma_smoke_validated_shared_cq_mismatch",
+  "date": "2026-10-10",
   "rows": [
     {
       "id": "be0e134fedc1bbda",
@@ -27379,10 +27379,47 @@
     },
     "urmaSmokeConfigs": 14,
     "urmaSmokeTimedSamples": 42,
-    "urmaFormalStatus": "8-QP GET stall and oracle failure reproduced; 1-QP completed but occupancy gate rejected; waiting for clean idle window"
+    "urmaFormalStatus": "Formal acceptance remains zero: 8 independent SQs alias 2 CQs on both endpoints; per-QP quiet completion accounting mismatches shared CQ identity",
+    "urmaDiagnostic": {
+      "cleanControls": [
+        "1QP/256MiB",
+        "8QP/64MiB"
+      ],
+      "failingConfiguration": "GET16KiB/batch8/8QP/target256MiB/workset64MiB",
+      "failingTimedSample": 4,
+      "sourceAndGuards": "passed",
+      "destinationSentinelBytes": 16777216,
+      "destinationAffectedQps": [
+        6,
+        7
+      ],
+      "actualCqGroups": [
+        [
+          0,
+          2,
+          4,
+          6
+        ],
+        [
+          1,
+          3,
+          5,
+          7
+        ]
+      ],
+      "cqIdentityChecked": [
+        "CQ number",
+        "buffer",
+        "doorbell"
+      ],
+      "bothEndpointsConfirmed": true,
+      "quietReportedErrors": false,
+      "repairValidated": false,
+      "diagnosticPerformancePublished": false
+    }
   },
   "blockers": [
-    "URMA 正式 8 QP GET16KiB / batch8 出现卡住和数据校验失败；单配置已复现，失败段不发布性能，后续在整机空闲窗口排障",
+    "URMA 正式扫描未验收：双端 8 个 QP 实际共用 2 个 CQ（0/2/4/6、1/3/5/7），与逐 QP quiet 的独立完成计数不匹配；原失败配置留下 16MiB 初始化值。待修复并复验，失败及诊断性能不发布。",
     "同机实际链路层级、多机机柜及板号仍待核对；当前结果不能代表全柜或跨柜带宽",
     "小消息跨轮波动明显：PUT 1KiB 的两轮吞吐为 0.916 / 1.778 GB/s，原因待查，保留全部样本，不取快轮替代",
     "1 QP 对照完成双端正确性检查，但结束时发现其他 NPU 进程，按门限拒收性能，本轮退出"
@@ -27406,5 +27443,5 @@
     }
   ],
   "displayStatus": "同机正式扫描通过 · 节点间 URMA 冒烟通过",
-  "scopeNote": "同机 MTE 已测 84 配置两轮、1～64 AIV、32B～16MiB；节点间 URMA 只有 14 个冒烟配置通过，正式多 QP 扫描待排障。实际链路层级、机柜与 X/Y 轴尚未确认；全柜聚合和双向压力未完成，当前最高点不是硬件上限。"
+  "scopeNote": "同机 MTE 已测 84 配置两轮、1～64 AIV、32B～16MiB；节点间 URMA 只有 14 个冒烟配置通过，正式多 QP 扫描待验证共享 CQ 的完成等待修复。实际链路层级、机柜与 X/Y 轴尚未确认；全柜聚合和双向压力未完成，当前最高点不是硬件上限。"
 }
