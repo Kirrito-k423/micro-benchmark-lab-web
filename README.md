@@ -94,3 +94,18 @@ python3 scripts/report-a5-simd.py --data public/data/a5-simd.json --report repor
 ```
 
 导入器要求完整两轮、固定矩阵、源码/构建/样本哈希、全部输出验证和短批次前后占用证据；缺失任一项就拒绝导出。报告与 PNG/SVG 均从验收 JSON 重新计算。
+
+## A5 单卡多核 DataCopy 带宽
+
+[多核页面](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=bandwidth) 扫描 1/2/4/8/12/16/20/24/28/32/40/48/56/64 AIV，分区读写、小工作集、1/2GiB 大工作集、同址只读和空循环分别展示。支持 tile/batch、轮次、聚合/平均每核带宽、共同耗时与并行效率筛选；图例多选、点选原始 ACL 样本及逐核 DMA 分布、CSV、PNG/SVG。
+
+Ascend950DT_9582 / CANN 9.1.0，378 配置 × 两轮、9072 计时样本、1512 预热样本通过验收。1GiB 工作集观测最高读 2.076TB/s、写 2.099TB/s，均为 64 AIV；相对对应单核约 54–55 倍。56→64 核仍提高约 13–14%，追加 2GiB 工作集同样未确认平台。N95=64 是已测档位相对于本次最高值的阈值，不能声称已用满物理 HBM。
+
+聚合带宽使用同 stream ACL Event 的完整多核 kernel 共同区间，不相加单核峰值、不扣空循环。每个核独立 UB，各核写分区互不重叠；同址对照只读且包含重复逻辑请求。每次 launch 校验完整写目标/各核最后两组读入结果、保护区和核记录；源码、二进制、矩阵及占用前后凭据再次验收。两轮 p50 相对差异中位数 0.162%，最大 6.153%。
+
+[报告](reports/a5-bandwidth-20261009.md) · [代码与运行 SOP](https://github.com/Kirrito-k423/ascend-kernel-lab/tree/codex/a5-alignment-simt/examples/a5_bandwidth)。原始共同毫秒样本、每核 SYS_CNT 差值和证据哈希保存于 `public/data/a5-bandwidth.json`；完整绝对时间与设备日志留在私有归档。
+
+```bash
+python3 scripts/import-a5-bandwidth.py --runs /absolute/private/raw --environment /absolute/environment.json --platform-config /absolute/platform-config.ini --akl-root /absolute/akl --output public/data/a5-bandwidth.json
+python3 scripts/report-a5-bandwidth.py --data public/data/a5-bandwidth.json --report reports/a5-bandwidth-20261009.md --figures public/figures
+```

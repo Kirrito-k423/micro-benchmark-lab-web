@@ -50,7 +50,7 @@ export async function mountSimd(){
       select('metric','纵轴',[['p50','完成耗时 / μs'],['gops','有效元素运算 / Gop/s'],['speedup','相对 Tensor API 的速度比']])+
       select('round','测量轮次',[['all','两轮 p50 / p95 中位数'],[1,'第 1 轮'],[2,'第 2 轮']]);
     root.innerHTML=`<header class="topbar"><a class="brand" href="?variant=A">microbench<small>AKL MEASUREMENT LAB</small></a><div class="top-right">真实 A5 测量 · ${esc(db.environment.cann)}</div></header>
-      <main class="lab-main"><nav class="lab-tabs"><a href="?variant=A">DataCopy 容量</a><a href="?lab=alignment">DataCopy 对齐</a><a href="?lab=simd" class="active">SIMD ↔ SIMT</a><a href="?lab=simt">原始算术对照</a><a href="?lab=overhead">SIMT 调用开销</a></nav>
+      <main class="lab-main"><nav class="lab-tabs"><a href="?variant=A">DataCopy 容量</a><a href="?lab=bandwidth">DataCopy 多核带宽</a><a href="?lab=alignment">DataCopy 对齐</a><a href="?lab=simd" class="active">SIMD ↔ SIMT</a><a href="?lab=simt">原始算术对照</a><a href="?lab=overhead">SIMT 调用开销</a></nav>
       <div class="lab-heading"><div class="eyebrow">A5 / SAME WORKLOAD / SIMD & SIMT</div><h1>规则批量计算，哪种实现更快？</h1><p>同一 FP32 输入与每元素计算量。Tensor API 每步读写 UB；REG SIMD 与 SIMT 将依赖链保留在寄存器。REG 是 SIMD 编程；4 组版交错四条独立向量链，未增加有效计算量。</p></div>
       <div class="lab-env">${esc(db.environment.soc)} · ${esc(db.environment.cann)} · 单 AIV · 本地 UB · SYS_CNT ${fmt(db.environment.clockHz/1e6,0)} MHz · ${esc(db.measuredDate)}</div>
       <p class="lab-caption">${fmt(db.evidence.configsPerRound,0)} 配置 × 2 轮 · ${fmt(db.evidence.timedSamples,0)} 计时样本 · 全输出/尾块/保护区校验通过。两轮 p50 相对差异中位数 ${fmt(repeat.medianRelativePct)}%，最大 ${fmt(repeat.maxRelativePct)}%；不是置信区间。</p>
