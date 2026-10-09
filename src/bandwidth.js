@@ -1,5 +1,6 @@
 import * as echarts from 'echarts';
 import './mbench.css';
+import {showMeasurementCode, codeLink} from './measurement-code.js';
 const median=xs=>{const a=[...xs].sort((x,y)=>x-y);return(a[Math.floor((a.length-1)/2)]+a[Math.ceil((a.length-1)/2)])/2;};
 const fmt=(v,d=2)=>Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -74,10 +75,11 @@ export async function mountBandwidth(){
   function mark(){root.querySelectorAll('[data-point]').forEach(el=>el.classList.toggle('chosen',el.dataset.point===state.selected));}
   function detail(rows){
     sampleChart?.dispose();balanceChart?.dispose();const g=rows.find(r=>r.id===state.selected);const el=root.querySelector('#lab-detail');
-    if(!g){el.innerHTML='<p>当前组合没有测量。</p>';return;}
-    el.innerHTML=`<div class="eyebrow">COMMON WINDOW / CORE BALANCE</div><h2>${g.cores} AIV · ${label(g)}</h2><div class="lab-point-value">${g.control?fmt(g.p50Us,3):fmt(g.gbps)}<small>${g.control?' μs · 整任务共同':' GB/s · 整卡有效'}</small></div><p>${g.sharedRead?'同址只读':'每核独立 GM 分区'} · 实际工作集 ${fmt(g.actualRing/2**20)} MiB · 全核搬运 ${fmt(g.movedBytes/2**30,4)} GiB</p><label class="lab-field">样本轮次<select id="bw-sample-round">${g.members.map((r,i)=>`<option value="${i}">第 ${r.round} 轮</option>`).join('')}</select></label><div id="lab-samples"></div><p>各 AIV 核内 ${g.control?'空循环/事件':'DMA'}区间 · p50 / μs</p><div id="bw-balance"></div><dl><dt>共同 p50</dt><dd>${fmt(g.p50Us,3)} μs</dd><dt>每轮样本</dt><dd>12 + 2 预热</dd><dt>输出与保护区</dt><dd>逐 launch 全部通过</dd></dl><details><summary>原始共同区间 / 核内差值 / 参数</summary><pre>${esc(JSON.stringify(g.members,null,2))}</pre></details>`;
+    if(!g){el.innerHTML='<p>当前组合没有测量。</p>';showMeasurementCode('bandwidth',null,db);return;}
+    el.innerHTML=`${codeLink}<div class="eyebrow">COMMON WINDOW / CORE BALANCE</div><h2>${g.cores} AIV · ${label(g)}</h2><div class="lab-point-value">${g.control?fmt(g.p50Us,3):fmt(g.gbps)}<small>${g.control?' μs · 整任务共同':' GB/s · 整卡有效'}</small></div><p>${g.sharedRead?'同址只读':'每核独立 GM 分区'} · 实际工作集 ${fmt(g.actualRing/2**20)} MiB · 全核搬运 ${fmt(g.movedBytes/2**30,4)} GiB</p><label class="lab-field">样本轮次<select id="bw-sample-round">${g.members.map((r,i)=>`<option value="${i}">第 ${r.round} 轮</option>`).join('')}</select></label><div id="lab-samples"></div><p>各 AIV 核内 ${g.control?'空循环/事件':'DMA'}区间 · p50 / μs</p><div id="bw-balance"></div><dl><dt>共同 p50</dt><dd>${fmt(g.p50Us,3)} μs</dd><dt>每轮样本</dt><dd>12 + 2 预热</dd><dt>输出与保护区</dt><dd>逐 launch 全部通过</dd></dl><details><summary>原始共同区间 / 核内差值 / 参数</summary><pre>${esc(JSON.stringify(g.members,null,2))}</pre></details>`;
     sampleChart=echarts.init(root.querySelector('#lab-samples'),null,{renderer:'svg'});balanceChart=echarts.init(root.querySelector('#bw-balance'),null,{renderer:'svg'});
     const draw=r=>{
+      showMeasurementCode('bandwidth',r,db);
       sampleChart.setOption({animation:false,grid:{left:60,right:12,top:24,bottom:25},tooltip:{trigger:'axis'},xAxis:{type:'category',data:r.eventMs.map((_,i)=>i+1)},yAxis:{type:'value',scale:true,name:'共同 μs'},series:[{type:'line',symbolSize:4,data:r.eventMs.map(v=>v*1000),itemStyle:{color:'#16756b'}}]});
       balanceChart.setOption({animation:false,grid:{left:60,right:12,top:24,bottom:35},tooltip:{trigger:'axis'},xAxis:{type:'category',name:'逻辑 AIV 编号',nameLocation:'middle',nameGap:24,data:r.coreP50Us.map((_,i)=>i)},yAxis:{type:'value',scale:true,name:'核内 μs'},series:[{type:'bar',data:r.coreP50Us,itemStyle:{color:'#8a9db0'}}]});
     };draw(g.members[0]);root.querySelector('#bw-sample-round').onchange=e=>draw(g.members[Number(e.target.value)]);

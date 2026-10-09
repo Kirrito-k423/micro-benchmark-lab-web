@@ -1,5 +1,6 @@
 import * as echarts from 'echarts';
 import './mbench.css';
+import {showMeasurementCode, codeLink} from './measurement-code.js';
 const ops=['加法','减法','乘法','除法'];
 const bulk=[32,64,128,256,512,1024,2048,4096,8192,16384];
 const median=xs=>{const a=[...xs].sort((x,y)=>x-y);return(a[Math.floor((a.length-1)/2)]+a[Math.ceil((a.length-1)/2)])/2;};
@@ -78,10 +79,10 @@ export async function mountSimd(){
   function mark(){root.querySelectorAll('[data-point]').forEach(el=>el.classList.toggle('chosen',el.dataset.point===s.selected));}
   function detail(rows){
     samples?.dispose();const g=rows.find(r=>r.id===s.selected);const el=root.querySelector('#lab-detail');
-    if(!g){el.innerHTML='<p>该组合没有测量。</p>';return;}
-    el.innerHTML=`<div class="eyebrow">RAW SAMPLE INSPECTOR</div><h2>${name(g)}</h2><div class="lab-point-value">${fmt(g.p50,5)}<small> μs · ${g.members.length===2?'两轮 p50 中位数':'p50'}</small></div><p>${g.elements} 元素 · 每元素 ${g.steps} 次 · ${g.threads??'—'} SIMT 线程</p><label class="lab-field">原始样本轮次<select id="simd-sample-round">${g.members.map((r,i)=>`<option value="${i}">第 ${r.round} 轮</option>`).join('')}</select></label><div id="lab-samples"></div><dl><dt>完整输出与边界</dt><dd>全部通过</dd><dt>最大绝对误差</dt><dd>${Math.max(...g.members.map(r=>r.maxAbsError))}</dd><dt>有效运算数</dt><dd>${g.elements*g.steps}</dd></dl><details><summary>原始参数 / tick / 构建哈希</summary><pre>${esc(JSON.stringify(g.members,null,2))}</pre></details>`;
+    if(!g){el.innerHTML='<p>该组合没有测量。</p>';showMeasurementCode('simd',null,db);return;}
+    el.innerHTML=`${codeLink}<div class="eyebrow">RAW SAMPLE INSPECTOR</div><h2>${name(g)}</h2><div class="lab-point-value">${fmt(g.p50,5)}<small> μs · ${g.members.length===2?'两轮 p50 中位数':'p50'}</small></div><p>${g.elements} 元素 · 每元素 ${g.steps} 次 · ${g.threads??'—'} SIMT 线程</p><label class="lab-field">原始样本轮次<select id="simd-sample-round">${g.members.map((r,i)=>`<option value="${i}">第 ${r.round} 轮</option>`).join('')}</select></label><div id="lab-samples"></div><dl><dt>完整输出与边界</dt><dd>全部通过</dd><dt>最大绝对误差</dt><dd>${Math.max(...g.members.map(r=>r.maxAbsError))}</dd><dt>有效运算数</dt><dd>${g.elements*g.steps}</dd></dl><details><summary>原始参数 / tick / 构建哈希</summary><pre>${esc(JSON.stringify(g.members,null,2))}</pre></details>`;
     samples=echarts.init(root.querySelector('#lab-samples'),null,{renderer:'svg'});
-    const draw=r=>samples.setOption({animation:false,grid:{left:50,right:12,top:24,bottom:24},tooltip:{trigger:'axis'},xAxis:{type:'category',data:r.rawTicks.map((_,i)=>i+1)},yAxis:{type:'value',scale:true,name:'μs'},series:[{type:'line',symbolSize:4,data:r.rawTicks.map(t=>Number(t)*1e6/db.environment.clockHz),itemStyle:{color:'#15756c'}}]});
+    const draw=r=>{showMeasurementCode('simd',r,db);samples.setOption({animation:false,grid:{left:50,right:12,top:24,bottom:24},tooltip:{trigger:'axis'},xAxis:{type:'category',data:r.rawTicks.map((_,i)=>i+1)},yAxis:{type:'value',scale:true,name:'μs'},series:[{type:'line',symbolSize:4,data:r.rawTicks.map(t=>Number(t)*1e6/db.environment.clockHz),itemStyle:{color:'#15756c'}}]});};
     draw(g.members[0]);root.querySelector('#simd-sample-round').onchange=e=>draw(g.members[Number(e.target.value)]);
   }
   window.addEventListener('resize',()=>{chart?.resize();samples?.resize();});render();

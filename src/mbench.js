@@ -1,5 +1,6 @@
 import * as echarts from 'echarts';
 import './mbench.css';
+import {showMeasurementCode, codeLink} from './measurement-code.js';
 import { mountSimd } from './simd.js';
 import { mountBandwidth } from './bandwidth.js';
 import { mountNetwork } from './network.js';
@@ -124,12 +125,13 @@ export async function mountMbench(initial){
     samples?.dispose();
     const g=rows.find(r=>r.members.some(m=>m.id===state.selected));
     const el=document.querySelector('#lab-detail');
-    if(!g){el.innerHTML='<p class="empty">暂无匹配样本</p>';return;}
+    if(!g){el.innerHTML='<p class="empty">暂无匹配样本</p>';showMeasurementCode(state.view,null,db);return;}
     const r=g.members.find(r=>r.id===state.selected)||g.members[0];
-    el.innerHTML=`<div class="eyebrow">RAW SAMPLE INSPECTOR</div><h2>一个点，完整计时</h2><label class="lab-field">测量轮次<select id="lab-sample-round">${g.members.map(m=>`<option value="${escape(m.id)}" ${m.id===r.id?'selected':''}>第 ${m.round} 轮</option>`).join('')}</select></label>
+    el.innerHTML=`${codeLink}<div class="eyebrow">RAW SAMPLE INSPECTOR</div><h2>一个点，完整计时</h2><label class="lab-field">测量轮次<select id="lab-sample-round">${g.members.map(m=>`<option value="${escape(m.id)}" ${m.id===r.id?'selected':''}>第 ${m.round} 轮</option>`).join('')}</select></label>
       <div class="lab-point-value">${fmt(r.p50,5)}<small> μs · p50</small></div><p>${state.view==='alignment'?`${r.api} · ${r.dtype} · ${r.elements} 元素 / ${r.payload} B`:`${implementations[r.impl]} · FP32 · ${r.elements} 元素${[1,3].includes(r.impl)?` · ${r.threads} 线程`:''}`}</p>
       <div id="lab-samples"></div><dl><dt>p95</dt><dd>${fmt(r.p95,5)} μs</dd><dt>计时样本</dt><dd>${r.rawTicks.length}</dd><dt>${state.view==='alignment'?'循环 × batch':state.view==='simt'?'依赖链 / SIMT VF 次数':'循环 / SIMT VF 次数'}</dt><dd>${state.view==='alignment'?`${r.loops} × ${r.batch}`:`${state.view==='simt'?r.steps:r.vf_calls} / ${r.actualSimtVfCalls??(r.impl===1?1:r.impl===3?r.vf_calls:0)}`}</dd><dt>输出校验</dt><dd>全部通过</dd></dl>
       <details><summary>原始 tick 与参数</summary><pre>${escape(JSON.stringify(r,null,2))}</pre></details>`;
+    showMeasurementCode(state.view,r,db);
     samples=echarts.init(document.querySelector('#lab-samples'),null,{renderer:'svg'});
     const calls=state.view==='alignment'?r.loops*r.batch:1;
     samples.setOption({animation:false,grid:{left:50,right:12,top:22,bottom:26},tooltip:{trigger:'axis'},xAxis:{type:'category',data:r.rawTicks.map((_,i)=>i+1)},yAxis:{type:'value',scale:true},series:[{type:'line',symbolSize:4,data:r.rawTicks.map(t=>Number(t)*1e6/db.environment.clockHz/calls),itemStyle:{color:'#15756c'}}]});

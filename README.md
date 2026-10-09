@@ -6,6 +6,24 @@ AKL 实机测量结果的交互式浏览站点。按实验条件比较接口完�
 
 公开预览：[Micro Benchmark Lab](https://kirrito-k423.github.io/micro-benchmark-lab-web/)。默认显示方案 A，保留数据筛选、图表和样本联动；公网构建隐藏原型切换条。
 
+所有实验页提供「此测量的代码与计时」面板。点选曲线或表格，再选样本轮次，可查看该单轮的参数、p50、主体循环、API 重载、完成事件和计时边界。支持切换片段、复制原文、下载完整文件与固定内容的 GitHub 链接。参数和原始代码分别显示，没有把示意代码冒充实测实现。
+
+源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 10,958 条配置轮次。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
+
+多核 DataCopy 已有两个 UB 窗口，复用窗口前等完成；每组提交的请求数由 batch 决定。约 2.1 TB/s 是该实现和完整 kernel ACL Event 口径下的有效吞吐，包含初始化、同步与结果导出，不证明物理 HBM 上限。页面提供核内循环及 Host 计时源码，便于设计同条件的流水实现对照。
+
+重新导出源码目录（只读取私有归档；公开输出仅包含源码、参数索引与哈希）：
+
+```bash
+python3 scripts/export-measurement-code.py \
+  --akl-root /absolute/akl-with-historical-commits \
+  --network-root /absolute/akl-network \
+  --private-results /absolute/private/results
+node scripts/check-measurement-code.mjs
+```
+
+核验器覆盖每条测量的绑定、完整文件 SHA-256、片段原文/行号及旧版本隔离，并拒绝未知二进制、错配源码与 commit。该检查验证网站数据对应关系，不产生新的 NPU 测量。
+
 数据来源：ascend-kernel-lab 的 A3 DataCopy 实测报告和 PR #33 的 A5 回传证据。展示有效 payload 吞吐、每调用完成耗时与原始样本；不同设备、CANN、同步方式和工作集分别标识。
 
 ## 运行原型
