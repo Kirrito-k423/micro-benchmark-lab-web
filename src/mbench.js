@@ -65,7 +65,7 @@ export async function mountMbench(initial){
     root.innerHTML=`<header class="topbar"><a class="brand" href="?variant=A">microbench<small>AKL MEASUREMENT LAB</small></a><div class="top-right">真实 A5 测量 · ${escape(db.environment.cann)}</div></header>
       <main class="lab-main"><nav class="lab-tabs"><a href="?variant=A">DataCopy 容量</a>${Object.entries(labels).map(([v,t])=>`<a href="?lab=${v}" class="${state.view===v?'active':''}">${t}</a>`).join('')}</nav>
       <div class="lab-heading"><div class="eyebrow">A5 / SINGLE AIV / RAW EVIDENCE</div><h1>${labels[state.view]}</h1><p>${note}</p></div>
-      <div class="lab-env">${escape(db.environment.soc)} · ${escape(db.environment.cann)} · 单 AIV · ${fmt(db.environment.clockHz/1e6,0)} MHz · ${escape(db.measuredDate)} · ${rows.length} 个配置点${db.evidence.receiverValidation==='passed'?'':' · 首批实测，本地验收中'}</div>
+      <div class="lab-env">${escape(db.environment.soc)} · ${escape(db.environment.cann)} · 单 AIV · SYS_CNT ${fmt(db.environment.clockHz/1e6,0)} MHz · ${escape(db.measuredDate)} · ${rows.length} 个配置点${db.evidence.receiverValidation==='passed'?'':' · 首批实测，本地验收中'}</div>
       ${repeat?`<p class="lab-caption">本组全部配置的两轮 p50 相对差异：中位数 ${fmt(repeat.medianRelativePct,3)}%，最大 ${fmt(repeat.maxRelativePct,3)}%。这是重复性观察，不是置信界；微小差异需结合波动判断。</p>`:''}
       <section class="panel lab-controls">${controls()}</section>
       <div class="lab-grid"><section class="panel"><div class="panel-head"><h2>${state.view==='alignment'?(state.alignmentSource==='fixed'?'15 个边界长度的固定缓冲复验':'127–257 个元素的长度扫描'):state.view==='simt'?'线程数与同工作量性能':'线程数与每次 VF 完成耗时'}</h2><button id="lab-export" class="quiet">CSV</button></div><div id="lab-chart"></div>
