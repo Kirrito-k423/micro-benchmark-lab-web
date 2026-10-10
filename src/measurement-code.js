@@ -16,7 +16,7 @@ export function showMeasurementCode(family,row,db) {
   let panel=root.querySelector('#measurement-code');
   if(!panel) {
     panel=document.createElement('section');panel.id='measurement-code';panel.className='panel measurement-code';
-    const anchor=root.querySelector('.lab-table, .prototype-state');
+    const anchor=root.querySelector('#ws-table')??root.querySelector('.lab-table, .prototype-state');
     if(anchor)anchor.before(panel);else root.append(panel);
   }
   if(!row){panel.innerHTML='<h2>此测量的代码与计时</h2><p>当前筛选没有已测量点。</p>';return;}

@@ -12,6 +12,7 @@ for(const [hash,file] of Object.entries(catalog.files)) {
 }
 const sets=[['capacity','datacopy','rows'],['alignment','a5-mbench','alignment'],['alignment','a5-mbench','alignmentPaired'],['simt','a5-mbench','simt'],['simd','a5-simd','rows'],['bandwidth','a5-bandwidth','rows'],['network','a5-network','rows']];
 if(existsSync(new URL('../public/data/a5-store-tail.json',import.meta.url)))sets.push(['store-tail','a5-store-tail','rows']);
+if(existsSync(new URL('../public/data/a5-workset.json',import.meta.url)))sets.push(['workset','a5-workset','rows']);
 let points=0;
 for(const [family,name,key] of sets) {
   const db=read(name);

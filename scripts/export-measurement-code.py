@@ -80,6 +80,11 @@ def export(web, akl, network, private):
         build(d['evidence']['binaryHash'], akl, d['evidence']['sourceHashes'],
               'examples/a5_store_tail/kernel.cpp', 'examples/a5_store_tail/main.cpp', d['evidence']['sourceCommit'])
 
+    if 'a5-workset' in data:
+        d = data['a5-workset']
+        build(d['evidence']['binaryHash'], akl, d['evidence']['sourceHashes'],
+              'examples/a5_bandwidth/kernel.cpp', 'examples/a5_bandwidth/main.cpp')
+
     out = web / 'public/data/measurement-code.json'
     out.write_text(json.dumps(catalog, ensure_ascii=False, separators=(',', ':')) + '\n')
     print(f'{len(catalog["builds"])} builds, {len(catalog["files"])} immutable source files; {out.stat().st_size} bytes')
