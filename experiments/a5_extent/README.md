@@ -16,8 +16,8 @@
 python3 plan.py
 bash build.sh
 # 完整轮次由 execution-plan.json 预声明，每次只执行一个短批；按实测空闲 device 传参数。
-python3 run_stage.py --device 1 --key smoke-normal --output results/smoke-normal
-python3 run_stage.py --device 1 --key smoke-huge-first --output results/smoke-huge-first
+python3 run_stage.py --device 1 --key smoke-normal-v2 --output results/smoke-normal-v2
+python3 run_stage.py --device 1 --key smoke-huge-first-v2 --output results/smoke-huge-first-v2
 python3 run_stage.py --device 1 --key r1-normal-00 --output results/r1-normal-00
 ```
 

@@ -15,7 +15,7 @@ def make_plan():
     stages=[]
     smoke=[c for c in cases if c[3] in [32,4<<20] and c[5]==2]
     for policy in ['normal','huge-first']:
-        stages.append(dict(key='smoke-'+policy,round=0,policy=policy,seed=202610110,
+        stages.append(dict(key='smoke-'+policy+'-v2',round=0,policy=policy,seed=202610110,
             cases=smoke,warmup=1,samples=2))
     for round in [1,2]:
         shuffled=cases[:];random.Random(202610110+round).shuffle(shuffled)

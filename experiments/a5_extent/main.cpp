@@ -143,7 +143,7 @@ int main(int argc,char** argv) {
             for(size_t i=0;i<ticks.size();++i){out<<(i?",[":"[");for(size_t j=0;j<8;++j)out<<(j?",\"":"\"")<<ticks[i][j]<<'"';out<<']';}
             out<<"],\"launch_stamps\":[";
             for(size_t i=0;i<stamps.size();++i){out<<(i?",[":"[");for(size_t j=0;j<2;++j)out<<(j?",":"")<<stamps[i][j];out<<']';}
-            out<<"}\n";out.flush();std::cout<<"PASS "<<c.id<<" bytes="<<c.bytes<<" api="<<c.api<<" direction="<<c.direction<<" windows="<<c.windows<<std::endl;
+            out<<"]}\n";out.flush();std::cout<<"PASS "<<c.id<<" bytes="<<c.bytes<<" api="<<c.api<<" direction="<<c.direction<<" windows="<<c.windows<<std::endl;
         }
         return 0;
     }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
