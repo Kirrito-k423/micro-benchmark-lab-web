@@ -8,6 +8,7 @@ export function measurementSource(catalog, family, row, db) {
   let hashes;
   if (family === 'alignment' || family === 'simt' || family === 'overhead') hashes = db.evidence.sources;
   if (family === 'simd' || family === 'bandwidth' || family === 'store-tail' || family === 'workset') hashes = db.evidence.sourceHashes;
+  if (family === 'peer-copy') hashes = db.evidence.sourceHashesByBinary[binary];
   if (family === 'network') hashes = Object.fromEntries(Object.entries(db.evidence.measurementSourceSha256ByBinary[binary] ?? {}).map(([k,v]) => [k.replace('src/', 'examples/a5_network/'),v]));
   if (family === 'capacity' && row.device === 'A5') hashes = db.provenance.a5Runs.find(r => r.run === row.run)?.sourceSha256;
   if (hashes && Object.entries(build.files).some(([path,hash]) => hashes[path] !== hash)) return null;
@@ -19,7 +20,7 @@ export function measurementSource(catalog, family, row, db) {
 }
 
 export function sourceExcerpts(source, family, row) {
-  const kernel = source.files.find(f => f.path.endsWith('kernel.cpp') || f.path === 'kernels/datacopy.cpp');
+  const kernel = source.files.find(f => f.path.endsWith('kernel.cpp') || f.path === 'kernels/datacopy.cpp' || f.path.endsWith('.asc'));
   const host = source.files.find(f => f.path.endsWith('main.cpp'));
   const blocks = [];
   function add(title, file, from, to, includeEnd = false) {
@@ -30,11 +31,15 @@ export function sourceExcerpts(source, family, row) {
     const end = last + (includeEnd ? 1 : 0);
     blocks.push({title, file, start:first + 1, end, text:lines.slice(first,end).join('\n')});
   }
-  if (family === 'capacity' || family === 'alignment') {
+  if(family==='peer-copy'&&row.implementation==='peer'){
+    add('DataCopy 与完成边界 · L2 hint 设置在实际切片',kernel,'template <bool BYPASS','void launch');
+    add('Host 分配、输入初始化与独立 tile 校验',kernel,'    uint32_t *input','        for (int w =',false);
+    add('完整 kernel 的 ACL Event、原始样本与尾部校验',kernel,'        for (int r =','        std::sort(times',false);
+  } else if (family === 'capacity' || family === 'alignment') {
     add('主体循环 · 起止打点与完成等待',kernel,'    trace.Mark(2);','    trace.Mark(3);',true);
     add('实际 API 重载 · DataCopy / DataCopyPad',kernel,'template<bool Store>','template<typename T, bool Store, bool Trace');
     add('UB 分配、初始化和结果导出',kernel,'template<typename T, bool Store, bool Trace',kernel.text.includes('SelectRun')?'template<typename T, bool Trace>':'template<bool Trace>');
-  } else if (family === 'bandwidth' || family === 'store-tail' || family === 'workset') {
+  } else if (family === 'bandwidth' || family === 'store-tail' || family === 'workset' || family === 'peer-copy') {
     add(family==='store-tail'?'主体循环 · 双窗口 / 仅末尾完成 · SYS_CNT':'双窗口主体循环 · SYS_CNT 核内区间',kernel,'    SyncAll();','    const uint64_t end',true);
     add('完成事件 · 每个窗口独立等待',kernel,'template<bool Store, bool Set>','__aicore__ inline void Work');
     add('UB 分配、初始化和全核结果导出',kernel,'__aicore__ inline void Work','extern "C" __global__');
@@ -81,8 +86,13 @@ export function implementationContext(family,r,db) {
     if(family==='alignment')params.push(['GM 分配方式',r.fixedBuffers?'固定缓冲复验':'逐 shape 分配扫描']);
     timing='trace.Mark(2) → trace.Mark(3)，总 tick 除以 loops × batch。包含地址计算、提交、完成等待与最终排空；UB 初始化和结果导出在这段计时之外。';
     notes=[r.windows===2?'双窗口交替；复用该窗口前等待其旧 DMA，另一窗口可在途。':'单窗口；每个 batch 后等待 DMA 完成，再发下一批。','有效 payload 吞吐包含循环和同步成本，工作集复用不证明 HBM 物理流量。'];
+  } else if(family==='peer-copy') {
+    params.push(['方向 / AIV',`GM → UB / ${r.cores}`],['输入分配策略',r.allocation],['L2 / 输入模式',`${r.cache} / ${r.pattern}`],['完成方式',r.completion],['tile / 数据 UB',`${r.tileBytes} B / ${r.dataUbBytes} B`],['实际 GM 工作集',`${r.actualRing} B`],['全核 payload / 遍历次数',`${r.movedBytes} B / ${r.movedBytes/r.actualRing}`],['计时内读结果导出',`${r.readOutputBytes} B`]);
+    timing='同 stream ACL Event 包围完整 kernel，预热、初始化输入与 Host 校验在计时外。核内 SYS_CNT 持续 ticks 单列，不相加核峰值。';
+    notes=[r.implementation==='peer'?'原代码及 peer 变体：每 tile 前 32 B 独立 untimed 校验；计时循环后检查最后各 buffer 前 32 B。不是逐计时 launch 的完整输出校验。':'AKL：每个计时 launch 检查最后两组完整 UB 与 128 B 保护区，保留双窗口和 SyncAll。','分配对照只改变输入页策略；sink / records 的分配策略在各自实现内保持不变。HUGE_FIRST 可回退，HUGE_ONLY 成功表示未回退普通页。','每个配置使用新分配，轮次顺序随机；未测实际页表、TLB miss 或 HBM 物理事务。'];
   } else if(family==='bandwidth'||family==='store-tail'||family==='workset') {
     params.push(['方向 / AIV',`${r.direction} / ${r.cores}`],['tile × batch',`${r.tileBytes} B × ${r.batch}`],['UB 窗口 / 数据 UB',`2 / ${2*r.tileBytes*r.batch} B 每核`],['每核分区 / groups',`${r.perCoreRing} B / ${r.groups}`],['实际 GM 工作集',`${r.actualRing} B`],['全核有效字节',`${r.movedBytes} B`],['模式',r.control?'空循环 / 事件':r.sharedRead?'同址只读':'各核独立 GM 分区']);
+    if(db.evidence.memoryPolicy)params.push(['GM 输入 / 输出分配',`${db.evidence.memoryPolicy.input} / ${db.evidence.memoryPolicy.output}`],['L2 配置',db.evidence.cachePolicy.mode]);
     timing='同 stream ACL Event 包围完整多核 kernel，包含调度、UB 初始化、两次 SyncAll、DMA、完成等待和结果导出。每核 SYS_CNT 只包围主体循环；聚合 GB/s 用共同 ACL 区间计算，不扣空对照。';
     notes=['双 UB 窗口交替，复用前等待对应 MTE2_S / MTE3_S；每组提交 batch 次 DataCopy(count)，不是无限深队列。','本点的有效 GB/s 属于这套流水、tile、batch 和计时条件；约 2.1 TB/s 不能证明物理 HBM 上限。','核内与完整 kernel 计时可以帮助定位开销；要归因实现瓶颈，仍需同条件的替代流水实测。'];
     if(family==='store-tail'){

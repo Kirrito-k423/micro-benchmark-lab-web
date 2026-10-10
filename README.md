@@ -8,7 +8,7 @@ AKL 实机测量结果的交互式浏览站点。按实验条件比较接口完�
 
 所有实验页提供「此测量的代码与计时」面板。点选曲线或表格，再选样本轮次，可查看该单轮的参数、p50、主体循环、API 重载、完成事件和计时边界。支持切换片段、复制原文、下载完整文件与固定内容的 GitHub 链接。参数和原始代码分别显示，没有把示意代码冒充实测实现。
 
-源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 11,260 条配置轮次。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
+源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 11,303 条配置轮次。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
 
 多核 DataCopy 已有两个 UB 窗口，复用窗口前等完成；每组提交的请求数由 batch 决定。约 2.1 TB/s 是该实现和完整 kernel ACL Event 口径下的有效吞吐，包含初始化、同步与结果导出，不证明物理 HBM 上限。页面提供核内循环及 Host 计时源码，便于设计同条件的流水实现对照。
 
@@ -158,3 +158,16 @@ uv run --no-project --with matplotlib python scripts/report-a5-workset.py --data
 ```
 
 接收器核对任务退出和归档、逐文件字节、构建/runner/planner 哈希、完整矩阵、参数与实际遍历字节、逐启动 oracle、两套时钟、Host/容器占用。缺测或占用失败不得发布完整结果。复现命令及全部点在公开报告中。
+
+## A5 同事代码复现与页分配对照
+
+入口 `?lab=peer-copy`：原样复现 TmpCode `datacopy_3t.asc`，再用 20 个控制变量配置比较输入分配、L2 hint、索引输入、完成策略与 tile 粒度。原配置加控制变量共 21 配置、两轮 840 正式样本。默认看 7 组核心发现，可切换全部点、Peer / AKL 实现和单轮样本。
+
+AKL 配对保留 2 GiB ring、32 KiB × 2、4 GiB 总搬运量、WindowEvent、SyncAll 与每启动完整最后两组 UB 校验，只更换输入分配策略。之前的多核、工作集及纯写同步对照已补标 NORMAL_ONLY 普通页条件，原始计时不变；当前大页结论限于 GM→UB 读取。
+
+复现源码在 `experiments/a5_peer_copy/`，按实际二进制哈希绑定编译宏和固定文件内容；原代码与 Peer 控制版本的 32 B 抽样 oracle 和 AKL 的完整最后窗口 oracle 分别标注。所有样本由任务归档逐字节接收核验，不使用“best GB/s”替代中位数。
+
+```bash
+python3 scripts/import-a5-peer-copy.py --runs /absolute/private/results --output public/data/a5-peer-copy.json
+uv run --no-project --with matplotlib python scripts/report-a5-peer-copy.py --data public/data/a5-peer-copy.json --report public/reports/a5-peer-copy-20261010.md --figures public/figures
+```

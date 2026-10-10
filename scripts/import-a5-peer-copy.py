@@ -76,13 +76,14 @@ def receive(base,web,partial=False):
                     start,end,logical,magic=map(int,s[core*4:core*4+4]);assert 0<=start<end<2**64 and logical==core and magic==0x414b4c42414e4431,'Core record differs';ds.append(end-start)
                 assert max(ds)*1e6/hz<=ms*1000+.5,'AKL clock inconsistency';lo.append(min(ds));hi.append(max(ds));duration.append([str(d) for d in ds])
             row.update(coreMinDurationTicks=[str(x) for x in lo],coreMaxDurationTicks=[str(x) for x in hi],coreDurationTicks=duration,warmupEventMs=r['warmup_event_ms'],oracle='full last two UB groups and 128 B guard on every launch',validatedEveryLaunch=True,readOutputBytes=64*2*bank)
-        assert actual_env['aiv_count']==64 and actual_env['ub_bytes']>=row['tileBytes']*row['buffers']+32,'Device envelope differs'
+        data_ub=row['tileBytes']*(row['buffers'] if kind=='peer' else 2*row['batch'])
+        assert actual_env['aiv_count']==64 and actual_env['ub_bytes']>=data_ub+32,'Device envelope differs'
         if env is None:env=actual_env
         assert env==actual_env,'Mixed device environments'
         assert all(math.isfinite(t) and t>0 for t in times),'Invalid ACL duration'
         row.update(eventMs=times,p50Us=statistics.median(times)*1000,p95Us=quantile(times,.95)*1000,coreMaxP50Us=statistics.median(hi)*1e6/hz)
         row['gbps']=row['movedBytes']/row['p50Us']/1000
-        row['dataUbBytes']=row['tileBytes']*(row['buffers'] if kind=='peer' else 2*row['batch'])
+        row['dataUbBytes']=data_ub
         public_receipt=dict(taskArchiveSha256=job['archive_sha256'],files={str(p.relative_to(root)):sha(p) for p in files if p not in files[:4]},occupancySha256=[sha(p) for p in files[:4]],sourceHashes=b['sources'],binaryHash=b['binaryHash'])
         receipt_digest=hashlib.sha256(json.dumps(public_receipt,sort_keys=True,separators=(',',':')).encode()).hexdigest();row['manifestHash']=receipt_digest;receipts.append(public_receipt|dict(manifestHash=receipt_digest));rows.append(row)
     wanted={'original-r1','original-r2',*plan.keys()};got={r['id'] for r in rows if r['phase']=='formal'}

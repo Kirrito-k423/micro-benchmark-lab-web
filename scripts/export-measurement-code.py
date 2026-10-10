@@ -18,13 +18,13 @@ def export(web, akl, network, private):
     data = {p.stem: json.loads(p.read_text()) for p in (web / 'public/data').glob('*.json') if p.stem != 'measurement-code'}
     catalog = dict(schema='akl.web.measurement-code.v1', files={}, builds={}, capacityRuns={})
 
-    def snapshot(repo, path, expected):
+    def snapshot(repo, path, expected, repo_url='https://github.com/Kirrito-k423/ascend-kernel-lab'):
         for commit in subprocess.check_output(['git', 'log', '--all', '--format=%H', '--', path], cwd=repo, text=True).splitlines():
             content = subprocess.check_output(['git', 'show', f'{commit}:{path}'], cwd=repo)
             if sha(content) != expected:
                 continue
             catalog['files'][expected] = dict(path=path, sha256=expected, text=content.decode(), contentCommit=commit,
-                url=f'https://github.com/Kirrito-k423/ascend-kernel-lab/blob/{commit}/{path}')
+                url=f'{repo_url}/blob/{commit}/{path}')
             return expected
         raise ValueError(f'No immutable source matches receipt: {path} {expected}')
 
@@ -84,6 +84,13 @@ def export(web, akl, network, private):
         d = data['a5-workset']
         build(d['evidence']['binaryHash'], akl, d['evidence']['sourceHashes'],
               'examples/a5_bandwidth/kernel.cpp', 'examples/a5_bandwidth/main.cpp')
+
+    if 'a5-peer-copy' in data:
+        d = data['a5-peer-copy']
+        for meta in d['evidence']['builds'].values():
+            files = {p: snapshot(web, p, h, 'https://github.com/Kirrito-k423/micro-benchmark-lab-web') for p,h in meta['sources'].items()}
+            catalog['builds'][meta['binaryHash']] = dict(binarySha256=meta['binaryHash'], files=files,
+                recordedSourceCommit=None, compileOptions=meta['compileOptions'])
 
     out = web / 'public/data/measurement-code.json'
     out.write_text(json.dumps(catalog, ensure_ascii=False, separators=(',', ':')) + '\n')
