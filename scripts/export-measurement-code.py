@@ -75,6 +75,11 @@ def export(web, akl, network, private):
             assert sha(subprocess.check_output(['git', 'show', f'{commit}:{p}'], cwd=network)) == h
         build(binary, network, hashes, 'examples/a5_network/kernel.cpp', 'examples/a5_network/main.cpp', commit)
 
+    if 'a5-store-tail' in data:
+        d = data['a5-store-tail']
+        build(d['evidence']['binaryHash'], akl, d['evidence']['sourceHashes'],
+              'examples/a5_store_tail/kernel.cpp', 'examples/a5_store_tail/main.cpp', d['evidence']['sourceCommit'])
+
     out = web / 'public/data/measurement-code.json'
     out.write_text(json.dumps(catalog, ensure_ascii=False, separators=(',', ':')) + '\n')
     print(f'{len(catalog["builds"])} builds, {len(catalog["files"])} immutable source files; {out.stat().st_size} bytes')

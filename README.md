@@ -8,7 +8,7 @@ AKL 实机测量结果的交互式浏览站点。按实验条件比较接口完�
 
 所有实验页提供「此测量的代码与计时」面板。点选曲线或表格，再选样本轮次，可查看该单轮的参数、p50、主体循环、API 重载、完成事件和计时边界。支持切换片段、复制原文、下载完整文件与固定内容的 GitHub 链接。参数和原始代码分别显示，没有把示意代码冒充实测实现。
 
-源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 10,958 条配置轮次。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
+源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 11,046 条配置轮次。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
 
 多核 DataCopy 已有两个 UB 窗口，复用窗口前等完成；每组提交的请求数由 batch 决定。约 2.1 TB/s 是该实现和完整 kernel ACL Event 口径下的有效吞吐，包含初始化、同步与结果导出，不证明物理 HBM 上限。页面提供核内循环及 Host 计时源码，便于设计同条件的流水实现对照。
 
@@ -127,3 +127,19 @@ Ascend950DT_9582 / CANN 9.1.0，378 配置 × 两轮、9072 计时样本、1512 
 python3 scripts/import-a5-bandwidth.py --runs /absolute/private/raw --environment /absolute/environment.json --platform-config /absolute/platform-config.ini --akl-root /absolute/akl --output public/data/a5-bandwidth.json
 python3 scripts/report-a5-bandwidth.py --data public/data/a5-bandwidth.json --report reports/a5-bandwidth-20261009.md --figures public/figures
 ```
+
+
+## A5 DataCopy 纯写同步对照
+
+[新页面](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=store-tail) 固定地址布局，在同一个二进制与进程的 GM 分配上，配对比较双窗口等待与持续提交、仅末尾完成。覆盖 1/16/32/64 AIV 与四种 tile/batch；每对样本随机先后顺序，支持工作集、轮次、吞吐/完成耗时/速度比、图例多选、原始配对样本、逐点源码和 CSV/PNG/SVG。
+
+40 配置 × 两轮、960 正式样本及 160 预热通过完整输出与保护区验证。64 AIV、1 GiB 工作集：4 KiB × 1 从 1.392 提高到 2.076 TB/s；其余成组提交变化 -0.19%～+0.75%，最高约 2.103 TB/s。2 GiB 工作集复验趋势相同。显式循环等待限制小提交，但无法解释成组路径与 4 TB/s 参考规格的全部差距；地址不重叠仍可能共用 bank / 通道资源，本轮没有验证其冲突。
+
+[报告](reports/a5-store-tail-20261010.md) · [AKL 核心 PR #53](https://github.com/Kirrito-k423/ascend-kernel-lab/pull/53) · [固定源码](https://github.com/Kirrito-k423/ascend-kernel-lab/tree/7870838bc924176c3920e2061b65b9e8a10098dd/examples/a5_store_tail)。新数据 `public/data/a5-store-tail.json` 单独存放，旧 DataCopy、SIMD、通信数据原样保留。
+
+```bash
+python3 scripts/import-a5-store-tail.py --runs /absolute/private/raw --akl-root /absolute/akl --tasks-state /absolute/private/tasks-state.json --output public/data/a5-store-tail.json
+uv run --with matplotlib python scripts/report-a5-store-tail.py --data public/data/a5-store-tail.json --report reports/a5-store-tail-20261010.md --figures public/figures
+```
+
+接收器验证完整两轮矩阵、每模式样本和配对次序、精确字节数、逐启动完整 oracle、Host/容器前后占用、任务真实退出/归档状态、原始归档与提取文件逐字一致，以及固定 commit 中的全部六个执行文件。生产导入拒绝不完整矩阵；`--smoke-only` 仅用于本地部分采集验收，不能作为发布完成证据。

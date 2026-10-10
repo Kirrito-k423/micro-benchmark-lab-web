@@ -4,6 +4,7 @@ import {showMeasurementCode, codeLink} from './measurement-code.js';
 import { mountSimd } from './simd.js';
 import { mountBandwidth } from './bandwidth.js';
 import { mountNetwork } from './network.js';
+import { mountStoreTail } from './store-tail.js';
 
 const labels={alignment:'DataCopy 对齐',simt:'SIMT 算术',overhead:'SIMT 调用开销'};
 const ops=['加法','减法','乘法','除法'];
@@ -13,6 +14,7 @@ const fmt=(n,d=3)=>Number(n).toLocaleString('en-US',{minimumFractionDigits:d,max
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export async function mountMbench(initial){
+  if(initial==='store-tail')return mountStoreTail();
   if(initial==='network')return mountNetwork();
   if(initial==='bandwidth')return mountBandwidth();
   if(initial==='simd')return mountSimd();
@@ -70,7 +72,7 @@ export async function mountMbench(initial){
       state.view==='simt'?'相同 FP32 输入、元素数与依赖链长度。SIMT 在寄存器中执行依赖链；SIMD Tensor API 每轮读写 UB 并同步。计时含计算调用与完成等待，不含 GM 准备和导出；速度比包括实现方式差异。':
       '最小线程体为每线程一次可观察 UB 写出。计时包含 VF 调用、线程体与完成同步；不能拆解成硬件线程创建的独立精确时间。';
     root.innerHTML=`<header class="topbar"><a class="brand" href="?variant=A">microbench<small>AKL MEASUREMENT LAB</small></a><div class="top-right">真实 A5 测量 · ${escape(db.environment.cann)}</div></header>
-      <main class="lab-main"><nav class="lab-tabs"><a href="?variant=A">DataCopy 容量</a><a href="?lab=bandwidth">DataCopy 多核带宽</a><a href="?lab=network">FullMesh / URMA</a><a href="?lab=simd">SIMD ↔ SIMT</a>${Object.entries(labels).map(([v,t])=>`<a href="?lab=${v}" class="${state.view===v?'active':''}">${t}</a>`).join('')}</nav>
+      <main class="lab-main"><nav class="lab-tabs"><a href="?variant=A">DataCopy 容量</a><a href="?lab=bandwidth">DataCopy 多核带宽</a><a href="?lab=store-tail">纯写同步对照</a><a href="?lab=network">FullMesh / URMA</a><a href="?lab=simd">SIMD ↔ SIMT</a>${Object.entries(labels).map(([v,t])=>`<a href="?lab=${v}" class="${state.view===v?'active':''}">${t}</a>`).join('')}</nav>
       <div class="lab-heading"><div class="eyebrow">A5 / SINGLE AIV / RAW EVIDENCE</div><h1>${labels[state.view]}</h1><p>${note}</p></div>
       <div class="lab-env">${escape(db.environment.soc)} · ${escape(db.environment.cann)} · 单 AIV · SYS_CNT ${fmt(db.environment.clockHz/1e6,0)} MHz · ${escape(db.measuredDate)} · ${rows.length} 个配置点${db.evidence.receiverValidation==='passed'?'':' · 首批实测，本地验收中'}</div>
       ${repeat?`<p class="lab-caption">本组全部配置的两轮 p50 相对差异：中位数 ${fmt(repeat.medianRelativePct,3)}%，最大 ${fmt(repeat.maxRelativePct,3)}%。这是重复性观察，不是置信界；微小差异需结合波动判断。</p>`:''}

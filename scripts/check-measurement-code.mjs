@@ -1,4 +1,4 @@
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {measurementSource,sourceExcerpts,implementationContext} from '../src/measurement-source.js';
@@ -11,6 +11,7 @@ for(const [hash,file] of Object.entries(catalog.files)) {
   assert.match(file.url,new RegExp(`/blob/${file.contentCommit}/`));
 }
 const sets=[['capacity','datacopy','rows'],['alignment','a5-mbench','alignment'],['alignment','a5-mbench','alignmentPaired'],['simt','a5-mbench','simt'],['simd','a5-simd','rows'],['bandwidth','a5-bandwidth','rows'],['network','a5-network','rows']];
+if(existsSync(new URL('../public/data/a5-store-tail.json',import.meta.url)))sets.push(['store-tail','a5-store-tail','rows']);
 let points=0;
 for(const [family,name,key] of sets) {
   const db=read(name);
@@ -41,4 +42,10 @@ assert.equal(measurementSource(catalog,'network',{...grouped,binarySha256:'unkno
 assert.equal(measurementSource(catalog,'network',{...grouped,sourceCommit:'wrong'},net),null);
 const bad=structuredClone(net);bad.evidence.measurementSourceSha256ByBinary[grouped.binarySha256]['src/kernel.cpp']='wrong';
 assert.equal(measurementSource(catalog,'network',grouped,bad),null);
+if(sets.some(([family])=>family==='store-tail')) {
+  const db=read('a5-store-tail'),row=db.rows[0];
+  assert.equal(measurementSource(catalog,'store-tail',{...row,binaryHash:'unknown'},db),null);
+  const wrong=structuredClone(db);wrong.evidence.sourceCommit='wrong';
+  assert.equal(measurementSource(catalog,'store-tail',row,wrong),null);
+}
 console.log(`${points} measurement rows bound; hashes, exact excerpts, two historical A3 kernels, SDK/CQ variants and stale/missing receipts checked.`);
