@@ -14,6 +14,7 @@ const sets=[['capacity','datacopy','rows'],['alignment','a5-mbench','alignment']
 if(existsSync(new URL('../public/data/a5-store-tail.json',import.meta.url)))sets.push(['store-tail','a5-store-tail','rows']);
 if(existsSync(new URL('../public/data/a5-workset.json',import.meta.url)))sets.push(['workset','a5-workset','rows']);
 if(existsSync(new URL('../public/data/a5-peer-copy.json',import.meta.url)))sets.push(['peer-copy','a5-peer-copy','rows']);
+if(existsSync(new URL('../public/data/a5-page-retest.json',import.meta.url)))sets.push(['page-retest','a5-page-retest','rows']);
 let points=0;
 for(const [family,name,key] of sets) {
   const db=read(name);
@@ -49,5 +50,17 @@ if(sets.some(([family])=>family==='store-tail')) {
   assert.equal(measurementSource(catalog,'store-tail',{...row,binaryHash:'unknown'},db),null);
   const wrong=structuredClone(db);wrong.evidence.sourceCommit='wrong';
   assert.equal(measurementSource(catalog,'store-tail',row,wrong),null);
+}
+if(sets.some(([family])=>family==='page-retest')) {
+  const db=read('a5-page-retest'),row=db.rows[0];
+  assert.equal(measurementSource(catalog,'page-retest',{...row,binaryHash:'unknown'},db),null);
+  assert.equal(measurementSource(catalog,'page-retest',{...row,bindingKey:'missing'},db),null);
+  const missing=structuredClone(db);delete missing.evidence.sourceBindings[row.bindingKey];
+  assert.equal(measurementSource(catalog,'page-retest',row,missing),null);
+  const wrong=structuredClone(db);const files=wrong.evidence.sourceBindings[row.bindingKey].sources;
+  files[Object.keys(files)[0]]='wrong';
+  assert.equal(measurementSource(catalog,'page-retest',row,wrong),null);
+  const wrongBinary=structuredClone(db);wrongBinary.evidence.sourceBindings[row.bindingKey].binaryHash='wrong';
+  assert.equal(measurementSource(catalog,'page-retest',row,wrongBinary),null);
 }
 console.log(`${points} measurement rows bound; hashes, exact excerpts, two historical A3 kernels, SDK/CQ variants and stale/missing receipts checked.`);

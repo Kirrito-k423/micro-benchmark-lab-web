@@ -2,13 +2,20 @@
 export function measurementSource(catalog, family, row, db) {
   const binding = family === 'capacity' ? catalog.capacityRuns[`${row.device}/${row.run}`] : null;
   const binary = binding?.build ?? row.libraryHash ?? row.executableHash ?? row.binaryHash ?? row.binarySha256;
-  const build = catalog.builds[binary];
+  const build = catalog.builds[family==='page-retest'?`page-retest/${row.bindingKey}`:binary];
   if (!build) return null;
+  if(family==='page-retest'&&build.binarySha256!==row.binaryHash)return null;
   if (binding && row.manifestHash && row.manifestHash !== binding.manifestSha256) return null;
   let hashes;
   if (family === 'alignment' || family === 'simt' || family === 'overhead') hashes = db.evidence.sources;
   if (family === 'simd' || family === 'bandwidth' || family === 'store-tail' || family === 'workset') hashes = db.evidence.sourceHashes;
   if (family === 'peer-copy') hashes = db.evidence.sourceHashesByBinary[binary];
+  if (family === 'page-retest') {
+    const receipt=db.evidence.sourceBindings[row.bindingKey];
+    if(!receipt||receipt.binaryHash!==row.binaryHash)return null;
+    hashes=receipt.sources;
+  }
+  if(family==='page-retest'&&!hashes)return null;
   if (family === 'network') hashes = Object.fromEntries(Object.entries(db.evidence.measurementSourceSha256ByBinary[binary] ?? {}).map(([k,v]) => [k.replace('src/', 'examples/a5_network/'),v]));
   if (family === 'capacity' && row.device === 'A5') hashes = db.provenance.a5Runs.find(r => r.run === row.run)?.sourceSha256;
   if (hashes && Object.entries(build.files).some(([path,hash]) => hashes[path] !== hash)) return null;
@@ -20,7 +27,26 @@ export function measurementSource(catalog, family, row, db) {
 }
 
 export function sourceExcerpts(source, family, row) {
-  const kernel = source.files.find(f => f.path.endsWith('kernel.cpp') || f.path === 'kernels/datacopy.cpp' || f.path.endsWith('.asc'));
+  if(family==='page-retest'){
+    const single=['power2','capacity','alignment','alignment-paired'].includes(row.kind);
+    const blocks=sourceExcerpts(source,single?'alignment':row.kind==='tail'?'store-tail':'bandwidth',row);
+    const extra=[];
+    function region(title,file,from,to){
+      const lines=file.text.split('\n'),first=lines.findIndex(l=>l.includes(from)),last=lines.findIndex((l,i)=>i>first&&l.includes(to));
+      if(first<0||last<0)throw new Error(`Missing allocation excerpt: ${file.path}`);
+      extra.push({title,file,start:first+1,end:last,text:lines.slice(first,last).join('\n')});
+    }
+    if(single){
+      region('Host · 页策略到 aclrtMalloc 的实际映射',source.files.find(f=>f.path.endsWith('native.py')),'    def alloc(','    def upload(');
+      region('Host · 2 MiB 下限、输入/输出分配与记录缓冲',source.files.find(f=>f.path.endsWith('run_datacopy.py')),'            sizes =','            samples =');
+    }else{
+      const host=source.files.find(f=>f.path.endsWith('main.cpp'));
+      region('Host · 本构建的数据 GM 页策略',host,'#ifndef DATA_POLICY','static uint32_t InputValue');
+      region('Host · 固定 GM 容量、输入/输出与普通页核记录',host,'        size_t inputBytes','        AC(aclrtMemcpy(r.x');
+    }
+    return [...blocks.filter(b=>!b.title.startsWith('完整文件')), ...extra, ...blocks.filter(b=>b.title.startsWith('完整文件'))];
+  }
+  const kernel = source.files.find(f => f.path.endsWith('kernel.cpp') || f.path.endsWith('/datacopy.cpp') || f.path.endsWith('.asc'));
   const host = source.files.find(f => f.path.endsWith('main.cpp'));
   const blocks = [];
   function add(title, file, from, to, includeEnd = false) {
@@ -73,6 +99,19 @@ export function sourceExcerpts(source, family, row) {
 }
 
 export function implementationContext(family,r,db) {
+  if(family==='page-retest'){
+    const single=['power2','capacity','alignment','alignment-paired'].includes(r.kind);
+    const view={...db,evidence:{...db.evidence,memoryPolicy:r.memoryPolicy,cachePolicy:{mode:'CANN API default normal'}}};
+    const context=implementationContext(single?'alignment':r.kind==='tail'?'store-tail':'bandwidth',r,view);
+    context.params.push(['数据 GM 输入 / 输出策略',`${r.memoryPolicy.input} / ${r.memoryPolicy.output}`]);
+    if(r.memoryPolicy.capacities_bytes)context.params.push(['实际输入 / 输出申请容量',`${r.memoryPolicy.capacities_bytes[0]} / ${r.memoryPolicy.capacities_bytes[2]} B`]);
+    if(r.allocationBytes)context.params.push(['输入 / 输出申请容量',`${r.allocationBytes.input} / ${r.allocationBytes.output} B`],['核记录申请容量',`${r.allocationBytes.records} B`]);
+    if(r.allocationBytes)context.notes.push('上述 C++ 申请容量由当前短批全部参数和绑定的 Host 分配源码计算，区别于该点实际触达的工作集；没有查询物理分配页表。');
+    if(!single&&r.kind!=='tail')context.notes[1]='有效吞吐使用本次共同 ACL Event，保留源码中的同步与导出成本；未测物理 HBM 事务。';
+    if(r.kind==='workset')context.notes.push('每条方向/访问曲线在本短批共用固定 GM 分配，实际工作集按 ring 大小裁剪；各轮重新分配并随机大小顺序。');
+    context.notes.push('本轮原始数据独立保留；普通页与大页优先的新单核配对使用同一 CANN、源码、shape 和循环参数。申请容量与实际触达工作集分别标注。');
+    return context;
+  }
   const env=family==='capacity'?db.environments[r.device]:db.environment;
   const params=[['测量 ID',r.id],['轮次 / 批次',r.round??r.run??r.phase],['芯片 / CANN',env?`${env.soc} / ${env.cann}`:`${r.soc} / CANN 未记录于公开点`]];
   const p50=r.p50??r.p50Us;

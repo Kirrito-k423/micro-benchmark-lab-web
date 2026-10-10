@@ -33,3 +33,5 @@ python3 run_stage.py --key power2-r1-normal-c000 --device 1 --output results/new
 多核、工作集和纯写用共同 ACL Event 包围完整 kernel，保留每核循环 SYS_CNT 持续 ticks。每次启动验证完整写目标 / 最后两组完整读窗口、128 B 保护区和所有核记录。Tail / Windowed 共用一次 GM 分配并随机顺序。
 
 有效字节吞吐不等于 HBM 物理事务。本轮没有测缓存命中、实际页表、TLB miss 或 bank / 通道映射。完整设备日志、地址、任务凭据、绝对时间和原始归档留在私有 results。
+
+计划中的空循环对照必须保持旧记录的 `groups`，即使其有效 `movedBytes=0`。`plan.py` 使用 `groups × cores × tileBytes × batch` 恢复目标工作量，不把 0 当成循环工作量；控制批次以 `-control` 后缀区分。实测曾在进入 kernel 前拒绝错误的零目标计划，原失败保留；修正未改变任何 payload 配置或二进制。接收器绑定原编译源码归档与两个冻结输入计划，独立核对差异；不会以当前修订的计划脚本冒充当时编译归档中的文件。

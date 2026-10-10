@@ -8,9 +8,9 @@ AKL 实机测量结果的交互式浏览站点。按实验条件比较接口完�
 
 所有实验页提供「此测量的代码与计时」面板。点选曲线或表格，再选样本轮次，可查看该单轮的参数、p50、主体循环、API 重载、完成事件和计时边界。支持切换片段、复制原文、下载完整文件与固定内容的 GitHub 链接。参数和原始代码分别显示，没有把示意代码冒充实测实现。
 
-源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 11,303 条配置轮次。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
+源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 18,469 条配置轮次（含本轮 7,166 条大页复测）。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
 
-多核 DataCopy 已有两个 UB 窗口，复用窗口前等完成；每组提交的请求数由 batch 决定。约 2.1 TB/s 是该实现和完整 kernel ACL Event 口径下的有效吞吐，包含初始化、同步与结果导出，不证明物理 HBM 上限。页面提供核内循环及 Host 计时源码，便于设计同条件的流水实现对照。
+原多核 DataCopy 的约 2.1 TB/s 属于普通页分配基线。已用同一读取实现、窗口完成策略和输入模式验证：仅改输入分配为大页优先，2 GiB ring 的有效吞吐可约为 3.9 TB/s。后续大页复测独立重测输入/输出数据页策略，不能把旧数值当作芯片上限。完整 ACL Event 保留初始化、同步及导出；没有测物理 HBM 事务。
 
 重新导出源码目录（只读取私有归档；公开输出仅包含源码、参数索引与哈希）：
 
@@ -171,3 +171,40 @@ AKL 配对保留 2 GiB ring、32 KiB × 2、4 GiB 总搬运量、WindowEvent、S
 python3 scripts/import-a5-peer-copy.py --runs /absolute/private/results --output public/data/a5-peer-copy.json
 uv run --no-project --with matplotlib python scripts/report-a5-peer-copy.py --data public/data/a5-peer-copy.json --report public/reports/a5-peer-copy-20261010.md --figures public/figures
 ```
+
+## 统一工作台与 A5 大页复测
+
+所有实验入口沿方案 A 统一页头、左侧实验目录/条件、曲线/样本、表格和逐点代码面板。旧 DataCopy 页有显式复测入口；B/C 仅保留为历史设计比较。过滤、样本轮次和代码片段均可以选择，筛选重新渲染保留滚动位置。
+
+[Peer 代码解释](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=peer-copy) 提供 GM / 每核 UB / 验证记录三个对象及六步执行解释。原代码的两块 64 KiB UB 在每组接收两个 tile，MTE2 PipeBarrier 约束该流水顺序，最后 MTE2→Scalar 完成后读结束 tick；它没有业务计算。独立未计时 kernel 校验每 tile 前 32 B，正式读取只导出每核尾部两块 UB 的前 32 B；核内循环与完整 ACL Event 的边界分开说明，不称全量复制 oracle。
+
+[大页复测](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=page-retest) 包含 7,166 配置轮次、85,992 正式计时样本，完整接收验收后发布。2026-10-10 的实际环境为 Ascend950DT_9582、64 AIV、221184 B UB、CANN 9.1.0。
+
+| 分组 | 两轮配置轮次 | 条件 |
+| --- | --- | --- |
+| 单 AIV 倍增 | 2,064 | 32 B × 2ⁿ；普通页/大页优先；读/写、3 重载、1/2 窗口、batch=1/8、小工作集/ring |
+| 旧容量复测 | 944 | 原完整参数，大页优先；历史 CANN 9.2.0 与本轮 9.1.0 区分 |
+| 长度/地址对齐 | 2,992 | 原 uint8/FP32 的完整扫描，大页优先 |
+| 固定分配边界 | 120 | 原 60 配置复验，大页优先 |
+| 多核 | 756 | 原 AIV 数、tile/batch、ring 与完成边界，大页优先 |
+| 工作集 | 210 | 原加密大小、访问范围、完整共同时间，大页优先 |
+| 纯写同步 | 80 | 同一分配的 Windowed / Tail 随机配对，大页优先 |
+
+单窗口 batch=1 的 count/params 共 13 个倍增大小（32 B–128 KiB），最大单次 shape 由实际 UB 裁剪；Pad 的 uint16 字节 blockLen 另有限制。108 非法组合记录为 skipped。输入/输出至少申请 2 MiB，大页优先可能回退；HUGE_ONLY 的三个边界冒烟不能代表全部正式分配都未回退。
+
+实际工作集、backing 申请容量和单次 payload 分开。单核 ring 受 65,536 slots 上限约束：32 B 为 2 MiB，随 shape 增大至 64 MiB。默认 L2，未证明冷 HBM；loops 自适应并完整覆盖所有 slots。旧容量按 loops 分线，不混合不同摊销口径。单核是 trace 循环内每调用平均完成时间，多核为共同完整 ACL Event。
+
+[报告与静态图](public/reports/a5-page-retest-20261010.md) 从完整接收数据生成；[可运行源码](experiments/a5_page_retest/README.md) 记录构建和分阶段执行。新数据与原 A3/A5 DataCopy、SIMD、通信数据独立存放。A3 未在本轮重测；实际页表、TLB miss、bank/通道与缓存命中未知，分配效果不归因为唯一硬件机制。
+
+```bash
+uv run --no-project --with numpy python scripts/import-a5-page-retest.py \
+  --runs /absolute/private/a5-page-retest-20261010 \
+  --output public/data/a5-page-retest.json
+uv run --no-project --with matplotlib python scripts/report-a5-page-retest.py \
+  --data public/data/a5-page-retest.json \
+  --report public/reports/a5-page-retest-20261010.md --figures public/figures
+node scripts/check-measurement-code.mjs
+npm run build:pages
+```
+
+导入器以原始 tar 字节绑定全部文件、源码/二进制、占用与计时；逐启动 oracle 全通过、两轮覆盖完整才可发布。`--partial` 仅本地预览，生产页面拒绝未完整验收数据。源码面板也显式展示 Host 的 `aclrtMalloc` 页策略与申请容量，拒绝缺失/错配构建。

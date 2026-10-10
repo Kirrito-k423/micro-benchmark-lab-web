@@ -1,3 +1,4 @@
+import {applyLabShell} from './lab-shell.js';
 import * as echarts from 'echarts';
 import './mbench.css';
 import {showMeasurementCode, codeLink} from './measurement-code.js';
@@ -61,7 +62,8 @@ export async function mountSimd(){
       <section class="panel" style="padding:24px"><h2>如何读这些曲线</h2><p>SIMT 线程可以循环处理多个元素；1 线程处理 129 元素的四种运算已通过完整输出验证。SIMD 一条向量指令可计算多个 lane；胜负还取决于 shape、寄存器依赖、调度与访存。连续规整输入是本组条件，未测分支、离散访问和多 AIV 并发。</p><p>steps=0 统一使用加法入口，是各实现的无运算参考；不是其他运算专属的控制开销，REG/SIMT 仍有读写与调用；Tensor 只有完成等待。显示原始耗时，不跨实现相减。REG 4 组在不足四组向量时回退 1 组。短 shape 或小幅差异需结合原始样本与轮间变化。</p></section>
       <footer class="lab-footer"><a href="https://github.com/Kirrito-k423/ascend-kernel-lab/tree/codex/a5-alignment-simt/examples/a5_simd_mbench" target="_blank" rel="noreferrer">代码与复现 SOP ↗</a> · <a href="https://github.com/Kirrito-k423/micro-benchmark-lab-web/blob/codex/a5-mbench-results/reports/a5-simd-20261009.md" target="_blank" rel="noreferrer">实测报告 ↗</a> · <a href="${import.meta.env.BASE_URL}figures/a5-simd.png" download>PNG</a> · <a href="${import.meta.env.BASE_URL}figures/a5-simd.svg" download>SVG</a><p>公开原始 tick、预热、Host launch 与校验误差。设备日志与机器地址保留在私有归档。前后占用快照无法证明采样间每一瞬间都无外部活动。</p><details><summary>证据与计时口径</summary><pre>${esc(JSON.stringify(db.evidence,null,2))}</pre></details></footer></main>`;
     const series=[...new Set(rows.map(key))].map(k=>{const rs=rows.filter(r=>key(r)===k);return{name:name(rs[0]),type:'line',symbolSize:6,smooth:false,lineStyle:{type:rs[0].impl===1?'dashed':'solid'},itemStyle:{color:rs[0].impl===0?'#a58b40':rs[0].impl===2?'#16756b':rs[0].impl===3?'#e77d42':({'32':'#8a9db0','128':'#5274a2','512':'#875aa6','1024':'#b87586','2048':'#7589a5'}[rs[0].threads])},data:rs.map(r=>({value:[s.axis==='elements'?r.elements:r.steps,value(r,rows)],id:r.id}))};});
-    chart=echarts.init(root.querySelector('#lab-chart'),null,{renderer:'svg'});
+    applyLabShell(root,'simd');
+  chart=echarts.init(root.querySelector('#lab-chart'),null,{renderer:'svg'});
     chart.setOption({animation:false,color:['#ac934f','#8a9db0','#5274a2','#875aa6','#b87586','#15756c','#e47c44','#314f49'],legend:{top:8,type:'plain',selected:selectedLegend},
       tooltip:{trigger:'item',formatter:p=>`${esc(p.seriesName)}<br>${s.axis==='elements'?'元素数':'每元素运算次数'}：${p.value[0]}<br>${fmt(p.value[1],5)} ${s.metric==='p50'?'μs':s.metric==='gops'?'Gop/s':'×'}`},
       grid:{left:76,right:28,top:94,bottom:78},xAxis:{type:s.axis==='elements'?'log':'value',logBase:2,name:s.axis==='elements'?'有效元素数':'每元素运算次数',nameLocation:'middle',nameGap:32,min:s.axis==='elements'?undefined:0},

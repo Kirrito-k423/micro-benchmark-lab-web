@@ -46,15 +46,19 @@ def create(web,ub,aiv):
       d=json.loads((web/'public/data'/f'{name}.json').read_text());groups={}
       for r in d['rows']:
         if r['round']!=1 or r.get('phase','formal')!='formal' or kind=='tail' and r['mode']!='windowed':continue
-        row=[int(r['caseId']),int(r['direction']=='UB_GM'),int(r['sharedRead']),r['cores'],r['tileBytes'],r['batch'],r['requestedRing'],r.get('targetBytes',r['movedBytes']),int(r.get('control',False))]
+        # 空对照没有有效搬运字节；工作量仍由旧记录的 groups 决定。
+        target=r.get('targetBytes',r['groups']*r['cores']*r['tileBytes']*r['batch'])
+        row=[int(r['caseId']),int(r['direction']=='UB_GM'),int(r['sharedRead']),r['cores'],r['tileBytes'],r['batch'],r['requestedRing'],target,int(r.get('control',False))]
         assert row[3]<=aiv
+        assert target>=r['requestedRing'] and target>0
         key=r['scope'] if kind=='workset' else str((row[1],row[2],row[4],row[5],row[6],row[8]))
         groups.setdefault(key,[]).append(row)
       for rd in [1,2]:
         rng=random.Random(20261040+rd);gs=list(groups.values());rng.shuffle(gs)
         for i,rows in enumerate(gs):
             rows=rows.copy();rng.shuffle(rows)
-            stages.append({'kind':kind,'round':rd,'policy':'huge-first','key':f'{kind}-r{rd}-huge-first-c{i:03}','plan':rows,'warmup':2,'samples':12,'reuse':True})
+            key=f'{kind}-r{rd}-huge-first-c{i:03}'+('-control' if any(r[8] for r in rows) else '')
+            stages.append({'kind':kind,'round':rd,'policy':'huge-first','key':key,'plan':rows,'warmup':2,'samples':12,'reuse':True})
     return dict(schema='akl.page-retest.plan.v1',ubBytes=ub,availableAiv=aiv,stages=stages,skipped=skipped,counts={k:sum(len(x.get('cases',x.get('plan',[])))*(2 if k=='tail' else 1) for x in stages if x['kind']==k) for k in {x['kind'] for x in stages}})
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--web-root',type=Path,required=True);p.add_argument('--ub-bytes',type=int,required=True);p.add_argument('--aiv-count',type=int,required=True);p.add_argument('--clock-hz',type=int,required=True);p.add_argument('--clock-source',required=True);p.add_argument('--soc',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();d=create(a.web_root,a.ub_bytes,a.aiv_count);d.update(clockHz=a.clock_hz,clockSource=a.clock_source,expectedSoc=a.soc);a.output.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n');print(json.dumps({'counts':d['counts'],'tasks':len(d['stages']),'skipped':len(d['skipped'])}))

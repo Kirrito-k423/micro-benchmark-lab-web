@@ -1,3 +1,5 @@
+import {mountPageRetest} from './page-retest.js';
+import {applyLabShell} from './lab-shell.js';
 import * as echarts from 'echarts';
 import './mbench.css';
 import {showMeasurementCode, codeLink} from './measurement-code.js';
@@ -16,6 +18,7 @@ const fmt=(n,d=3)=>Number(n).toLocaleString('en-US',{minimumFractionDigits:d,max
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export async function mountMbench(initial){
+  if(initial==='page-retest')return mountPageRetest();
   if(initial==='peer-copy')return mountPeerCopy();
   if(initial==='workset')return mountWorkset();
   if(initial==='store-tail')return mountStoreTail();
@@ -103,7 +106,8 @@ export async function mountMbench(initial){
     root.style.minHeight=viewport.h;window.scrollTo({left:viewport.x,top:viewport.y,behavior:'instant'});
   }
   function mountChart(rows,baseline){
-    chart=echarts.init(document.querySelector('#lab-chart'),null,{renderer:'svg'});
+    applyLabShell(root,state.view);
+  chart=echarts.init(document.querySelector('#lab-chart'),null,{renderer:'svg'});
     let series=[];
     if(state.view==='alignment'){
       for(const api of ['DataCopyPad_params','DataCopy_params']){

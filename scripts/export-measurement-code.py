@@ -92,6 +92,16 @@ def export(web, akl, network, private):
             catalog['builds'][meta['binaryHash']] = dict(binarySha256=meta['binaryHash'], files=files,
                 recordedSourceCommit=None, compileOptions=meta['compileOptions'])
 
+    if 'a5-page-retest' in data:
+        for key,meta in data['a5-page-retest']['evidence']['sourceBindings'].items():
+            files={}
+            for path,h in meta['sources'].items():
+                if h not in catalog['files']:
+                    snapshot(web,'experiments/a5_page_retest/'+path,h,'https://github.com/Kirrito-k423/micro-benchmark-lab-web')
+                    catalog['files'][h]['path']=path
+                files[path]=h
+            catalog['builds']['page-retest/'+key]=dict(binarySha256=meta['binaryHash'],files=files,recordedSourceCommit=None)
+
     out = web / 'public/data/measurement-code.json'
     out.write_text(json.dumps(catalog, ensure_ascii=False, separators=(',', ':')) + '\n')
     print(f'{len(catalog["builds"])} builds, {len(catalog["files"])} immutable source files; {out.stat().st_size} bytes')

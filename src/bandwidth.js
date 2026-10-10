@@ -1,3 +1,4 @@
+import {applyLabShell} from './lab-shell.js';
 import * as echarts from 'echarts';
 import './mbench.css';
 import {showMeasurementCode, codeLink} from './measurement-code.js';
@@ -55,7 +56,8 @@ export async function mountBandwidth(){
       <section class="panel lab-table simd-results"><div class="panel-head"><h2>当前筛选的核数点</h2><span class="subtle">点击行更新证据</span></div><div class="table-scroll"><table><thead><tr><th>AIV</th><th>tile × batch</th><th>实际 GM 工作集</th><th>共同 p50 / μs</th><th>共同 p95 / μs</th><th>聚合 GB/s</th><th>每核 GB/s</th></tr></thead><tbody>${rows.map(r=>`<tr tabindex="0" data-point="${r.id}" class="${r.id===state.selected?'chosen':''}"><td>${r.cores}</td><td>${label(r)}</td><td>${fmt(r.actualRing/2**20)} MiB</td><td class="mono">${fmt(r.p50Us,3)}</td><td class="mono">${fmt(r.p95Us,3)}</td><td class="mono">${fmt(r.gbps)}</td><td class="mono">${fmt(r.gbps/r.cores)}</td></tr>`).join('')}</tbody></table></div></section>
       <section class="panel bw-notes"><h2>“N95”与“用满带宽”如何区分</h2><p>N95 只回答已测档位中达到本次曲线最高值 95% 的最少核数；还要看后续点是否进入平台。若到最大可用核数仍增长，不能把最后一个点叫硬件带宽上限。tile、batch、方向和工作集都可能改变这条曲线。</p><p>ACL Event 区间包含整个多核 kernel：调度、起止全核同步、UB 初始化、DMA、完成等待与少量结果导出。Host 上传、下载和输出检查在区间之外。每核 SYS_CNT 只计算核内 DMA 差值；不相加各核峰值，不拼接未校准的跨核绝对时钟。</p><p>请求总工作集按每核两组 UB 的大小取整。各核使用独立分区；同址对照只读。每次全核有效搬运约 2 GiB；2 GiB 工作集验证阶段约 4 GiB，实际字节数保留在证据中。</p></section>
       <footer class="lab-footer"><a href="https://github.com/Kirrito-k423/ascend-kernel-lab/tree/codex/a5-alignment-simt/examples/a5_bandwidth" target="_blank" rel="noreferrer">代码与 SOP ↗</a> · <a href="https://github.com/Kirrito-k423/micro-benchmark-lab-web/blob/codex/a5-mbench-results/reports/a5-bandwidth-20261009.md" target="_blank" rel="noreferrer">完整报告 ↗</a> · <a href="${import.meta.env.BASE_URL}figures/a5-bandwidth.png" download>PNG</a> · <a href="${import.meta.env.BASE_URL}figures/a5-bandwidth.svg" download>SVG</a><p>公开原始 ACL 毫秒样本和每核 SYS_CNT 差值。完整 start/end、设备日志、占用前后快照与源码/构建凭据保留在私有归档。</p><details><summary>计时、字节与验收证据</summary><pre>${esc(JSON.stringify(db.evidence,null,2))}</pre></details></footer></main>`;
-    chart=echarts.init(root.querySelector('#lab-chart'),null,{renderer:'svg'});
+    applyLabShell(root,'bandwidth');
+  chart=echarts.init(root.querySelector('#lab-chart'),null,{renderer:'svg'});
     const series=[...new Set(rows.map(preset))].map(k=>{const rs=rows.filter(r=>preset(r)===k);return{name:label(rs[0]),type:'line',symbolSize:7,smooth:false,data:rs.map(r=>({value:[r.cores,y(r,rows)],id:r.id}))};});
     chart.setOption({animation:false,color:['#8a9db0','#875aa6','#16756b','#e77d42'],legend:{top:8,selected:selectedLegend},grid:{left:80,right:25,top:65,bottom:77},
       tooltip:{trigger:'item',formatter:p=>`${esc(p.seriesName)}<br>${p.value[0]} AIV<br>${fmt(p.value[1],3)} ${state.metric==='us'?'μs':state.metric==='efficiency'?'%':'GB/s'}`},
