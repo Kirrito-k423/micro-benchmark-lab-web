@@ -3,3 +3,4 @@ dist/
 .DS_Store
 .scratch/
 __pycache__/
+experiments/a5_extent/execution-plan.json

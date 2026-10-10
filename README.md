@@ -208,3 +208,20 @@ npm run build:pages
 ```
 
 导入器以原始 tar 字节绑定全部文件、源码/二进制、占用与计时；逐启动 oracle 全通过、两轮覆盖完整才可发布。`--partial` 仅本地预览，生产页面拒绝未完整验收数据。源码面板也显式展示 Host 的 `aclrtMalloc` 页策略与申请容量，拒绝缺失/错配构建。
+
+## 单 AIV 完整请求：32 B → 4 MiB
+
+已实现“单 AIV · 32 B → 4 MiB”实验。计划的 18 个倍增点覆盖读、写、三种 API、1/2 个 UB 窗口及普通页/大页优先配对，两轮共 864 配置轮次、10,368 个计时样本，另有同量 trace-off 对照。目前已通过 A5 的 32 B / 4 MiB 边界冒烟，正式两轮因借用机器出现其他 NPU 进程而排队；完整接收验收后再发布新曲线。旧的单次 API 曲线独立保留。
+
+4 MiB 是完整请求的总数据量，通过多个 UB tile 搬运。count / params 固定最大 64 KiB tile，旧 Pad 的字节 blockLen 使用最大 32 KiB tile；4 MiB 分别需要 64 / 128 次 API 调用。每个完整请求都包含最终完成等待再进入下一请求；网页与逐点代码面板同时显示总字节、tile、调用次数和申请容量。
+
+独立功能启动导出并校验全部读 tile。每个计时启动检查完整写目标或最后完整 UB 窗口及 128 B guard；两种读校验的范围分别记录。工作集为重复请求的总字节，默认 L2，不声称冷 HBM 吞吐。
+
+[源码与测量步骤](experiments/a5_extent/README.md)已保存。完整验收后由接收数据生成 18 点报告、静态图与交互页面；发布前核对原始归档、全部参数、时钟、占用、构建和 32 B–4 MiB 的完整覆盖。
+
+```bash
+python3 scripts/import-a5-extent.py /absolute/private/a5-extent-20261011 --output public/data/a5-extent.json
+uv run --no-project --with matplotlib python scripts/report-a5-extent.py --data public/data/a5-extent.json --report public/reports/a5-extent-20261011.md --figures public/figures
+node scripts/check-measurement-code.mjs
+npm run build:pages
+```

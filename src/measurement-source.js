@@ -4,18 +4,18 @@ export function measurementSource(catalog, family, row, db) {
   const binary = binding?.build ?? row.libraryHash ?? row.executableHash ?? row.binaryHash ?? row.binarySha256;
   const build = catalog.builds[family==='page-retest'?`page-retest/${row.bindingKey}`:binary];
   if (!build) return null;
-  if(family==='page-retest'&&build.binarySha256!==row.binaryHash)return null;
+  if((family==='page-retest'||family==='extent')&&build.binarySha256!==row.binaryHash)return null;
   if (binding && row.manifestHash && row.manifestHash !== binding.manifestSha256) return null;
   let hashes;
   if (family === 'alignment' || family === 'simt' || family === 'overhead') hashes = db.evidence.sources;
   if (family === 'simd' || family === 'bandwidth' || family === 'store-tail' || family === 'workset') hashes = db.evidence.sourceHashes;
   if (family === 'peer-copy') hashes = db.evidence.sourceHashesByBinary[binary];
-  if (family === 'page-retest') {
+  if (family === 'page-retest' || family === 'extent') {
     const receipt=db.evidence.sourceBindings[row.bindingKey];
     if(!receipt||receipt.binaryHash!==row.binaryHash)return null;
     hashes=receipt.sources;
   }
-  if(family==='page-retest'&&!hashes)return null;
+  if((family==='page-retest'||family==='extent')&&!hashes)return null;
   if (family === 'network') hashes = Object.fromEntries(Object.entries(db.evidence.measurementSourceSha256ByBinary[binary] ?? {}).map(([k,v]) => [k.replace('src/', 'examples/a5_network/'),v]));
   if (family === 'capacity' && row.device === 'A5') hashes = db.provenance.a5Runs.find(r => r.run === row.run)?.sourceSha256;
   if (hashes && Object.entries(build.files).some(([path,hash]) => hashes[path] !== hash)) return null;
@@ -27,6 +27,23 @@ export function measurementSource(catalog, family, row, db) {
 }
 
 export function sourceExcerpts(source, family, row) {
+  if(family==='extent'){
+    const kernel=source.files.find(f=>f.path.endsWith('kernel.cpp'));
+    const host=source.files.find(f=>f.path.endsWith('main.cpp'));
+    function cut(title,file,from,to){
+      const lines=file.text.split('\n'),start=lines.findIndex(l=>l.includes(from));
+      const end=lines.findIndex((l,i)=>i>start&&l.includes(to));
+      if(start<0||end<0)throw Error('Missing extent source region');
+      return{title,file,start:start+1,end,text:lines.slice(start,end).join('\n')};
+    }
+    return [cut('请求循环 · 多 tile 与每请求最终完成',kernel,'    // GetSystemCycle runs on Scalar:','    if constexpr (Trace) end'),
+      cut('每个 tile 使用的 API 重载',kernel,'template<int Api, bool Store>','template<int Api, bool Store, int Windows'),
+      cut('UB 窗口对应的完成事件',kernel,'template<bool Store, bool Set>','template<int Api, bool Store>'),
+      cut('Host 页策略与逐配置申请',host,'            r.freeData();','            // An independent untimed'),
+      cut('独立全量读 oracle 与采集开关配对',host,'            // An independent untimed','            out<<'),
+      ...source.files.map(file=>({title:'完整文件 · '+file.path.split('/').at(-1),file,start:1,
+        end:file.text.trimEnd().split('\n').length,text:file.text.trimEnd()}))];
+  }
   if(family==='page-retest'){
     const single=['power2','capacity','alignment','alignment-paired'].includes(row.kind);
     const blocks=sourceExcerpts(source,single?'alignment':row.kind==='tail'?'store-tail':'bandwidth',row);
@@ -99,6 +116,18 @@ export function sourceExcerpts(source, family, row) {
 }
 
 export function implementationContext(family,r,db) {
+  if(family==='extent')return{
+    params:[['测量 ID / 轮次',`${r.id} / ${r.round}`],['芯片 / CANN',`${db.environment.soc} / ${db.environment.cann}`],
+      ['方向 / API',`${r.direction} / ${r.api}`],['AIV / dtype',`1 / ${r.dtype}`],
+      ['完整请求总字节',`${r.payload} B`],['每次 DMA tile / 每请求次数',`${r.tileBytes} B / ${r.tilesPerRequest}`],
+      ['窗口 / 数据 UB',`${r.windows} / ${r.windows*r.tileBytes} B`],['完整请求重复数',r.loops],
+      ['实际工作集',`${r.workingSet} B`],['输入 / 输出申请',`${r.allocationBytes.input} / ${r.allocationBytes.output} B`],
+      ['数据 GM 页策略',r.allocation],['每请求平均 p50',`${r.p50.toFixed(5)} μs`],['有效吞吐',`${r.gbps.toFixed(3)} GB/s`]],
+    timing:'初始化用 V_S 显式等待 Vector 完成后，GetSystemCycle 在请求循环前后读数。每个请求由一个或多个连续 tile 组成，最后的 MTE 完成等待计入；总区间除以 repeats 得到每请求平均耗时。ACL Event 的完整 kernel 时间及关闭 trace 的对照另外保存。',
+    notes:['4 MiB 是总请求大小；UB 中保留 1/2 个 tile，不能当作一次 DataCopy 的 4 MiB UB Tensor。',
+      r.windows===1?'每次 tile 后完成等待，再提交下一次。':'窗口交替，复用前等待对应窗口；每个完整请求结束排空，不跨请求保持 DMA 在途。',
+      '每个计时启动验证完整写目标 / 最后完整 UB 窗口和 128 B guard；独立功能启动验证所有读 tile，证据范围分别记录。',
+      '同一份数据反复访问、默认 L2。有效 GB/s 不等于物理 HBM 流量；大页优先可以回退，未查物理页表。']};
   if(family==='page-retest'){
     const single=['power2','capacity','alignment','alignment-paired'].includes(r.kind);
     const view={...db,evidence:{...db.evidence,memoryPolicy:r.memoryPolicy,cachePolicy:{mode:'CANN API default normal'}}};
