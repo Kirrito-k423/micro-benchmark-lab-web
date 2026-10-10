@@ -50,6 +50,8 @@ __aicore__ inline void Work(GM_ADDR input, GM_ADDR output, GM_ADDR records,
         Duplicate(data, uint32_t(0), Windows * tile / 4);
         SetFlag<HardEvent::V_MTE2>(EVENT_ID0); WaitFlag<HardEvent::V_MTE2>(EVENT_ID0);
     }
+    // GetSystemCycle runs on Scalar: exclude asynchronous Duplicate completion explicitly.
+    SetFlag<HardEvent::V_S>(EVENT_ID0); WaitFlag<HardEvent::V_S>(EVENT_ID0);
     uint64_t begin = 0, end = 0;
     if constexpr (Trace) begin = GetSystemCycle();
     for (uint32_t request = 0; request < repeats; ++request) {

@@ -15,14 +15,14 @@ def make_plan():
     stages=[]
     smoke=[c for c in cases if c[3] in [32,4<<20] and c[5]==2]
     for policy in ['normal','huge-first']:
-        stages.append(dict(key='smoke-'+policy+'-v2',round=0,policy=policy,seed=202610110,
+        stages.append(dict(key='smoke-'+policy+'-v3',round=0,policy=policy,seed=202610110,
             cases=smoke,warmup=1,samples=2))
     for round in [1,2]:
         shuffled=cases[:];random.Random(202610110+round).shuffle(shuffled)
         for offset in range(0,len(shuffled),18):
             policies=['normal','huge-first'] if (offset//18+round)%2 else ['huge-first','normal']
             for policy in policies:
-                stages.append(dict(key=f'r{round}-{policy}-{offset//18:02d}',round=round,policy=policy,
+                stages.append(dict(key=f'r{round}-{policy}-{offset//18:02d}-v3',round=round,policy=policy,
                     seed=202610120+round*100+offset,cases=shuffled[offset:offset+18],warmup=2,samples=12))
     return dict(schema='akl.extent.plan.v1',expectedSoc='Ascend950DT_9582',ubBytes=221184,
         npuArch='dav-3510',clockHz=1000000000,
