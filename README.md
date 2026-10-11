@@ -8,7 +8,7 @@ AKL 实机测量结果的交互式浏览站点。按实验条件比较接口完�
 
 所有实验页提供「此测量的代码与计时」面板。点选曲线或表格，再选样本轮次，可查看该单轮的参数、p50、主体循环、API 重载、完成事件和计时边界。支持切换片段、复制原文、下载完整文件与固定内容的 GitHub 链接。参数和原始代码分别显示，没有把示意代码冒充实测实现。
 
-源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 18,469 条配置轮次（含本轮 7,166 条大页复测）。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
+源码由 `public/data/measurement-code.json` 按构建/库哈希绑定；覆盖现有 20,565 条配置轮次（含 7,166 条大页复测、864 条完整请求平均耗时扫描和 1,232 条单请求延迟 / 双向对照）。A3 容量归档中的两个 kernel 版本逐 run 区分，恢复绑定前核对配置和全部公开 tick；通信 SDK 原生 quiet 与 CQ 合并完成版本也分别绑定。仅以文件哈希找到的 commit 表示相同文件内容，不能当作实验记录的全仓 commit。绑定缺失或不匹配会明确显示未知，不回退到最新源码。
 
 原多核 DataCopy 的约 2.1 TB/s 属于普通页分配基线。已用同一读取实现、窗口完成策略和输入模式验证：仅改输入分配为大页优先，2 GiB ring 的有效吞吐可约为 3.9 TB/s。后续大页复测独立重测输入/输出数据页策略，不能把旧数值当作芯片上限。完整 ACL Event 保留初始化、同步及导出；没有测物理 HBM 事务。
 
@@ -226,4 +226,25 @@ python3 scripts/import-a5-extent.py /absolute/private/a5-extent-20261011 --outpu
 uv run --no-project --with matplotlib python scripts/report-a5-extent.py --data public/data/a5-extent.json --report public/reports/a5-extent-20261011.md --figures public/figures
 node scripts/check-measurement-code.mjs
 npm run build:pages
+```
+
+## A5 单请求延迟与独立地址双向带宽
+
+[延迟曲线](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=latency-duplex)覆盖 32 B 每次翻倍至 4 MiB 的 18 个点，三种 API、读写、1/2 个 UB 窗口、NORMAL_ONLY/HUGE_FIRST 和完整两轮。每个启动只完成一次请求，SYS_CNT 包含最后 DMA 完成；与此前重复请求的平均耗时分开。大请求使用多 tile，4 MiB 不表示一次 API 的 UB shape。
+
+[双向同时读写](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=latency-duplex&experiment=duplex)使用独立 GM 地址和读写各两套 UB 窗口；1/16/64 AIV、4/32 KiB tile、小工作集/128 MiB/2 GiB 每方向工作集、两种页策略各两轮。只读、只写、双向与空协议在同一对 GM 分配上随机配对。读、写、合计均除以同一个 trace-off 完整 kernel ACL 时间。
+
+2026-10-11 已完成 NPU 采集和接收验收：864 个单请求配置轮次、216 个只读/只写/双向配置轮次和 152 个空协议对照，共 1,232 行、14,784 个正式 trace 样本及同量 trace-off。64 AIV、32 KiB tile、2 GiB 每方向工作集的双向有效合计吞吐为普通页 2.8382 TB/s、大页优先 3.2140 TB/s；这些值来自共同时间，不相加单向峰值。HUGE_FIRST 可回退，物理页表与 bank/TLB/HBM 计数器未测。
+
+每次正式启动验证完整写目标或未改写区、保留读窗口及保护区；独立 untimed oracle 验证全部读 tile。原始归档私有保存。页面保留全部筛选、12 个正式样本、两轮原始值与逐点固定源码；图表按窗口调整，默认宽高 4:3。旧 DataCopy、SIMD 和通信数据保持原样。
+
+[实验报告](public/reports/a5-latency-duplex-20261011.md)、[固定源码与复现步骤](experiments/a5_latency_duplex/README.md)。导入、统计、源码和曲线计算检查：
+
+```bash
+python3 scripts/import-a5-latency-duplex.py /private/results --output public/data/a5-latency-duplex.json
+python3 scripts/export-latency-duplex-code.py /private/results
+node scripts/check-latency-duplex.mjs
+node scripts/check-measurement-code.mjs
+python3 scripts/report-latency-duplex.py
+uv run --offline --no-project --with matplotlib==3.11.2 python scripts/plot-latency-duplex.py
 ```

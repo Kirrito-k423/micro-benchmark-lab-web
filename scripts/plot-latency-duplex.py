@@ -8,7 +8,7 @@ WEB=Path(__file__).resolve().parents[1]
 db=json.loads((WEB/'public/data/a5-latency-duplex.json').read_text());assert db['evidence']['receiverValidation']=='passed'
 rows=db['rows'];out=WEB/'public/figures';out.mkdir(exist_ok=True)
 def time(**filters):
-    rs=[r for r in rows if not r['control'] and all(r[k]==v for k,v in filters.items())]
+    rs=[r for r in rows if not r['control'] and all(r.get(k)==v for k,v in filters.items())]
     assert len(rs)==2 and {r['round'] for r in rs}=={1,2}
     return statistics.median(r['p50'] for r in rs)
 colors={'normal':'#e77d42','huge-first':'#16756b'}

@@ -87,7 +87,7 @@ export async function mountLatencyDuplex() {
       grid: { left: 65, right: 22, top: 70, bottom: 75 },
       tooltip: { trigger: 'item', formatter: p => `${esc(p.seriesName)}<br>${latency() ? size(p.value[0]) : p.value[0] + ' AIV'}<br>${fmt(p.value[1], 4)} ${unit()}` },
       xAxis: { type: latency() ? 'log' : 'value', logBase: 2, name: latency() ? '完整请求 / B' : 'AIV',
-        min: Math.min(...rows.map(r => r.x)), max: Math.max(...rows.map(r => r.x)),
+        min: rows.length ? Math.min(...rows.map(r => r.x)) : undefined, max: rows.length ? Math.max(...rows.map(r => r.x)) : undefined,
         axisLabel: { fontSize: 9, formatter: v => latency() ? size(v) : v } },
       yAxis: { type: latency() ? state.scale : 'value', logBase: 10, name: unit() },
       dataZoom: [{ type: 'inside', filterMode: 'none' }, { type: 'slider', height: 16, bottom: 15 }],

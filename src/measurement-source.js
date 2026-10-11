@@ -143,6 +143,7 @@ export function implementationContext(family,r,db) {
       ['窗口 / 数据 UB',`${r.windows} / ${r.windows*r.tileBytes} B`],['完整请求重复数','1'],['单次请求完成 p50',`${r.p50.toFixed(5)} μs`]],
       timing:'Vector 初始化通过 V_S 完成后，SYS_CNT 包围恰好一个完整请求；包含所有 tile 提交、窗口复用等待和最后 DMA 完成，不除以重复数，不扣空协议。完整 kernel 的 trace 开 / 关 ACL Event 时间另存。',
       notes:[r.control?'空提交 / 完成协议对照没有定时数据 DMA，movedBytes = 0；保留原始耗时，不作为数据搬运延迟。':'32 B 至 4 MiB 是完整请求字节；大请求由多个 tile 构成，UB 只保留 1/2 个 tile。',
+        r.windows===1?'每个 tile 完成后再复用单窗口；这些等待属于请求完成延迟。':'双窗口交替，复用前等待其旧 DMA；请求末尾排空。源码 bank 指窗口索引，不是物理内存 bank。',
         '每次启动检查完整写目标 / 最后完整读 UB 窗口和保护区；另外独立启动验证全部读 tile。',
         '每个配置新申请 GM，数据页策略为 NORMAL_ONLY / HUGE_FIRST；默认 L2，物理页表与 TLB / HBM 计数器未采集。',
         '12 个独立启动的 p95 是有限样本观察值；不等同于生产负载的长尾延迟。']};
@@ -151,7 +152,7 @@ export function implementationContext(family,r,db) {
       ['读 / 写有效字节',`${r.readBytes} / ${r.writeBytes} B`],['共同完整 kernel p50',`${r.p50.toFixed(5)} μs`],
       ['读 / 写 / 合计',`${r.readGbps.toFixed(3)} / ${r.writeGbps.toFixed(3)} / ${r.gbps.toFixed(3)} GB/s`]],
       timing:'共同的 trace-off ACL Event 包围一个完整 kernel；读字节、写字节及两者之和分别除以同一时间。包含初始化、两次 SyncAll、DMA、完成等待和保留读窗口导出，不相加独立模式或不同核的峰值。',
-      notes:[r.control?'空协议对照省略数据 DMA，保留事件和完整 kernel 开销；不从正式结果中扣除。':'输入 / 输出 GM 及读 / 写 UB 独立；各 AIV 的 GM 分区互不重叠，同一组地址供四种模式随机配对。',
+      notes:[r.control?'空协议对照省略数据 DMA，保留事件和完整 kernel 开销；不从正式结果中扣除。':'输入 / 输出 GM 及读 / 写 UB 独立；各 AIV 的 GM 分区互不重叠，同一组地址供四种模式随机配对。源码 bank 指两窗口索引，不是物理内存 bank。',
         '每个 group 先提交读和写，再各自设置完成事件；复用窗口前等待，末尾分别排空。是否全程硬件重叠需要更细粒度的硬件 trace。',
         '核内读 / 写观测戳只是 Scalar 读数的完成上界，不能作为每方向独立带宽分母。',
         '完整写目标、最后两个完整读窗口和保护区逐次校验；全部读 tile 的 oracle 属于独立 untimed 启动。',

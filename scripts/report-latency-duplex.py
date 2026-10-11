@@ -8,7 +8,7 @@ def size(n):
         if n >= u: return f'{n/u:g} {name}'
     return f'{n} B'
 def summary(rows, **filters):
-    rs = [r for r in rows if not r['control'] and all(r[k] == v for k,v in filters.items())]
+    rs = [r for r in rows if not r['control'] and all(r.get(k) == v for k,v in filters.items())]
     assert len(rs) == 2 and {r['round'] for r in rs} == {1,2}, filters
     return median(r['p50'] for r in rs), median(r['p95'] for r in rs)
 def report(data, output):
