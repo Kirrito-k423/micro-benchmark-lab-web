@@ -1,4 +1,4 @@
-import * as echarts from 'echarts';
+import * as echarts from './chart-layout.js';
 import './mbench.css';
 import {applyLabShell,libraryHeader} from './lab-shell.js';
 import {showMeasurementCode,codeLink} from './measurement-code.js';

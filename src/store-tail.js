@@ -1,5 +1,5 @@
 import {applyLabShell} from './lab-shell.js';
-import * as echarts from 'echarts';
+import * as echarts from './chart-layout.js';
 import './mbench.css';
 import {showMeasurementCode,codeLink} from './measurement-code.js';
 const median=xs=>{const a=[...xs].sort((x,y)=>x-y);return(a[Math.floor((a.length-1)/2)]+a[Math.ceil((a.length-1)/2)])/2;};

@@ -1,6 +1,6 @@
 import {mountPageRetest} from './page-retest.js';
 import {applyLabShell} from './lab-shell.js';
-import * as echarts from 'echarts';
+import * as echarts from './chart-layout.js';
 import './mbench.css';
 import {showMeasurementCode, codeLink} from './measurement-code.js';
 import { mountSimd } from './simd.js';

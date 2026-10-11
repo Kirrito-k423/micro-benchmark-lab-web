@@ -1,5 +1,5 @@
 import {applyLabShell} from './lab-shell.js';
-import * as echarts from 'echarts';
+import * as echarts from './chart-layout.js';
 import './mbench.css';
 import {showMeasurementCode, codeLink} from './measurement-code.js';
 const ops=['加法','减法','乘法','除法'];

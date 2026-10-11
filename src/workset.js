@@ -1,5 +1,5 @@
 import {applyLabShell} from './lab-shell.js';
-import * as echarts from 'echarts';
+import * as echarts from './chart-layout.js';
 import './mbench.css';
 import {showMeasurementCode,codeLink} from './measurement-code.js';
 const names={read:'分区读 · GM → UB',write:'分区写 · UB → GM',shared:'同址读 · GM → UB'};

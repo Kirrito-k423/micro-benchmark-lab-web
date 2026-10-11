@@ -1,7 +1,7 @@
 import {libraryHeader,libraryNav,retestNotice} from './lab-shell.js';
 // PROTOTYPE — three structurally different DataCopy explorers on /prototype/datacopy/?variant=A|B|C.
 // Design question: chart-first workspace, table-first explorer, or evidence-first report?
-import * as echarts from 'echarts';
+import * as echarts from './chart-layout.js';
 import './style.css';
 import {loadMeasurementCode, showMeasurementCode, codeLink} from './measurement-code.js';
 await loadMeasurementCode();
