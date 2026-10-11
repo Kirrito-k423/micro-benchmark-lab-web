@@ -1,0 +1,20 @@
+/* Keep chart width : height at 3 : 4 in every experiment and prototype. */
+#app .chart,
+#app #lab-chart,
+#app #net-chart {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  margin: 0 auto;
+}
+
+#app #sample-chart,
+#app #lab-samples,
+#app #bw-balance {
+  width: 100%;
+  max-width: 330px;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  margin: 0 auto;
+}

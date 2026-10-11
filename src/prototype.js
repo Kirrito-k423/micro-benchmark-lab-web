@@ -6,6 +6,7 @@ import './style.css';
 import {loadMeasurementCode, showMeasurementCode, codeLink} from './measurement-code.js';
 await loadMeasurementCode();
 import { mountMbench } from './mbench.js';
+import './chart-layout.css';
 
 const db = await fetch(`${import.meta.env.BASE_URL}data/datacopy.json`).then(r => r.json());
 const params = new URLSearchParams(location.search);

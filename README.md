@@ -176,6 +176,8 @@ uv run --no-project --with matplotlib python scripts/report-a5-peer-copy.py --da
 
 所有实验入口沿方案 A 统一页头、左侧实验目录/条件、曲线/样本、表格和逐点代码面板。旧 DataCopy 页有显式复测入口；B/C 仅保留为历史设计比较。过滤、样本轮次和代码片段均可以选择，筛选重新渲染保留滚动位置。
 
+交互主图与样本图统一使用宽∶高 = 3∶4，随容器宽度缩放。桌面主图宽度最多 600 px、样本图最多 330 px；小屏缩窄时保持比例，曲线、图例、筛选与导出继续使用同一份测量数据。
+
 [Peer 代码解释](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=peer-copy) 提供 GM / 每核 UB / 验证记录三个对象及六步执行解释。原代码的两块 64 KiB UB 在每组接收两个 tile，MTE2 PipeBarrier 约束该流水顺序，最后 MTE2→Scalar 完成后读结束 tick；它没有业务计算。独立未计时 kernel 校验每 tile 前 32 B，正式读取只导出每核尾部两块 UB 的前 32 B；核内循环与完整 ACL Event 的边界分开说明，不称全量复制 oracle。
 
 [大页复测](https://kirrito-k423.github.io/micro-benchmark-lab-web/?lab=page-retest) 包含 7,166 配置轮次、85,992 正式计时样本，完整接收验收后发布。2026-10-10 的实际环境为 Ascend950DT_9582、64 AIV、221184 B UB、CANN 9.1.0。
@@ -211,7 +213,7 @@ npm run build:pages
 
 ## 单 AIV 完整请求：32 B → 4 MiB
 
-已实现“单 AIV · 32 B → 4 MiB”实验。计划的 18 个倍增点覆盖读、写、三种 API、1/2 个 UB 窗口及普通页/大页优先配对，两轮共 864 配置轮次、10,368 个计时样本，另有同量 trace-off 对照。目前已通过 A5 的 32 B / 4 MiB 边界冒烟，正式两轮因借用机器出现其他 NPU 进程而排队；完整接收验收后再发布新曲线。旧的单次 API 曲线独立保留。
+已实现“单 AIV · 32 B → 4 MiB”实验。计划的 18 个倍增点覆盖读、写、三种 API、1/2 个 UB 窗口及普通页/大页优先配对，两轮共 864 配置轮次、10,368 个计时样本，另有同量 trace-off 对照。目前已通过 A5 的 32 B / 4 MiB 边界冒烟，正式测量已验收 144/864 配置轮次、1,728 个 trace 样本及同量 trace-off 样本。后续受中台 NPU 占用字段传递错误阻塞，无法确认空闲，因此尚未启动剩余测量；完整接收验收后再发布新曲线。旧的单次 API 曲线独立保留。
 
 4 MiB 是完整请求的总数据量，通过多个 UB tile 搬运。count / params 固定最大 64 KiB tile，旧 Pad 的字节 blockLen 使用最大 32 KiB tile；4 MiB 分别需要 64 / 128 次 API 调用。每个完整请求都包含最终完成等待再进入下一请求；网页与逐点代码面板同时显示总字节、tile、调用次数和申请容量。
 
