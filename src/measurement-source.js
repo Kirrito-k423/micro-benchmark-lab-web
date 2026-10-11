@@ -4,18 +4,18 @@ export function measurementSource(catalog, family, row, db) {
   const binary = binding?.build ?? row.libraryHash ?? row.executableHash ?? row.binaryHash ?? row.binarySha256;
   const build = catalog.builds[family==='page-retest'?`page-retest/${row.bindingKey}`:binary];
   if (!build) return null;
-  if((family==='page-retest'||family==='extent')&&build.binarySha256!==row.binaryHash)return null;
+  if((family==='page-retest'||family==='extent'||family==='latency-duplex')&&build.binarySha256!==row.binaryHash)return null;
   if (binding && row.manifestHash && row.manifestHash !== binding.manifestSha256) return null;
   let hashes;
   if (family === 'alignment' || family === 'simt' || family === 'overhead') hashes = db.evidence.sources;
   if (family === 'simd' || family === 'bandwidth' || family === 'store-tail' || family === 'workset') hashes = db.evidence.sourceHashes;
   if (family === 'peer-copy') hashes = db.evidence.sourceHashesByBinary[binary];
-  if (family === 'page-retest' || family === 'extent') {
+  if (family === 'page-retest' || family === 'extent' || family === 'latency-duplex') {
     const receipt=db.evidence.sourceBindings[row.bindingKey];
     if(!receipt||receipt.binaryHash!==row.binaryHash)return null;
     hashes=receipt.sources;
   }
-  if((family==='page-retest'||family==='extent')&&!hashes)return null;
+  if((family==='page-retest'||family==='extent'||family==='latency-duplex')&&!hashes)return null;
   if (family === 'network') hashes = Object.fromEntries(Object.entries(db.evidence.measurementSourceSha256ByBinary[binary] ?? {}).map(([k,v]) => [k.replace('src/', 'examples/a5_network/'),v]));
   if (family === 'capacity' && row.device === 'A5') hashes = db.provenance.a5Runs.find(r => r.run === row.run)?.sourceSha256;
   if (hashes && Object.entries(build.files).some(([path,hash]) => hashes[path] !== hash)) return null;
@@ -27,6 +27,25 @@ export function measurementSource(catalog, family, row, db) {
 }
 
 export function sourceExcerpts(source, family, row) {
+  if(family==='latency-duplex'){
+    if(row.kind==='latency')return sourceExcerpts(source,'extent',row);
+    const kernel=source.files.find(f=>f.path.endsWith('kernel.cpp'));
+    const host=source.files.find(f=>f.path.endsWith('main.cpp'));
+    const cut=(title,file,from,to)=>{
+      const lines=file.text.split('\n'),start=lines.findIndex(l=>l.includes(from));
+      const end=lines.findIndex((l,i)=>i>start&&l.includes(to));
+      if(start<0||end<0)throw Error('Missing duplex source region');
+      return {title,file,start:start+1,end,text:lines.slice(start,end).join('\n')};
+    };
+    return [cut('两个方向先提交 · 独立窗口复用与最终排空',kernel,'    uint64_t cursor = 0;','    // Scalar observation'),
+      cut('独立读 / 写 UB 与初始化完成',kernel,'    TPipe pipe;','    uint64_t begin ='),
+      cut('每个方向独立的完成事件',kernel,'template<bool Write, bool Set>','// The MTE2'),
+      cut('同一 GM 分配上的四模式随机配对',host,'        r.freeData();','                std::vector<uint64_t> tick'),
+      cut('每次启动的完整目标、保留读窗口和保护区验证',host,'                AC(aclrtMemcpy(actual.data(),actual.size()*4,r.y','                auto& d=data[mode];'),
+      cut('独立启动 · 每个读 tile 全量 oracle',kernel,'// Independent, untimed oracle','extern "C" void launch_duplex_verify'),
+      ...source.files.map(file=>({title:'完整文件 · '+file.path.split('/').at(-1),file,start:1,
+        end:file.text.trimEnd().split('\n').length,text:file.text.trimEnd()}))];
+  }
   if(family==='extent'){
     const kernel=source.files.find(f=>f.path.endsWith('kernel.cpp'));
     const host=source.files.find(f=>f.path.endsWith('main.cpp'));
@@ -116,6 +135,28 @@ export function sourceExcerpts(source, family, row) {
 }
 
 export function implementationContext(family,r,db) {
+  if(family==='latency-duplex'){
+    const params=[['测量 ID / 轮次',`${r.id} / ${r.round}`],['芯片 / CANN',`${db.environment.soc} / ${db.environment.cann}`],
+      ['API / 方向',`${r.api} / ${r.direction}`],['数据 GM 页策略',r.allocation],['AIV / dtype',`${r.cores} / ${r.dtype}`],
+      ['输入 / 输出申请',`${r.allocationBytes.input} / ${r.allocationBytes.output} B`]];
+    if(r.kind==='latency')return{params:[...params,['完整请求字节',`${r.bytes} B`],['每次 DMA tile / 每请求次数',`${r.tileBytes} B / ${r.tilesPerRequest}`],
+      ['窗口 / 数据 UB',`${r.windows} / ${r.windows*r.tileBytes} B`],['完整请求重复数','1'],['单次请求完成 p50',`${r.p50.toFixed(5)} μs`]],
+      timing:'Vector 初始化通过 V_S 完成后，SYS_CNT 包围恰好一个完整请求；包含所有 tile 提交、窗口复用等待和最后 DMA 完成，不除以重复数，不扣空协议。完整 kernel 的 trace 开 / 关 ACL Event 时间另存。',
+      notes:[r.control?'空提交 / 完成协议对照没有定时数据 DMA，movedBytes = 0；保留原始耗时，不作为数据搬运延迟。':'32 B 至 4 MiB 是完整请求字节；大请求由多个 tile 构成，UB 只保留 1/2 个 tile。',
+        '每次启动检查完整写目标 / 最后完整读 UB 窗口和保护区；另外独立启动验证全部读 tile。',
+        '每个配置新申请 GM，数据页策略为 NORMAL_ONLY / HUGE_FIRST；默认 L2，物理页表与 TLB / HBM 计数器未采集。',
+        '12 个独立启动的 p95 是有限样本观察值；不等同于生产负载的长尾延迟。']};
+    return{params:[...params,['模式',r.mode],['每方向 GM 工作集 / 每核分区',`${r.workingSet} / ${r.perCoreWorkingSet} B`],
+      ['每方向 tile / 窗口',`${r.tileBytes} B / 2`],['每核数据 UB',`${4*r.tileBytes} B · 读写各两窗口`],
+      ['读 / 写有效字节',`${r.readBytes} / ${r.writeBytes} B`],['共同完整 kernel p50',`${r.p50.toFixed(5)} μs`],
+      ['读 / 写 / 合计',`${r.readGbps.toFixed(3)} / ${r.writeGbps.toFixed(3)} / ${r.gbps.toFixed(3)} GB/s`]],
+      timing:'共同的 trace-off ACL Event 包围一个完整 kernel；读字节、写字节及两者之和分别除以同一时间。包含初始化、两次 SyncAll、DMA、完成等待和保留读窗口导出，不相加独立模式或不同核的峰值。',
+      notes:[r.control?'空协议对照省略数据 DMA，保留事件和完整 kernel 开销；不从正式结果中扣除。':'输入 / 输出 GM 及读 / 写 UB 独立；各 AIV 的 GM 分区互不重叠，同一组地址供四种模式随机配对。',
+        '每个 group 先提交读和写，再各自设置完成事件；复用窗口前等待，末尾分别排空。是否全程硬件重叠需要更细粒度的硬件 trace。',
+        '核内读 / 写观测戳只是 Scalar 读数的完成上界，不能作为每方向独立带宽分母。',
+        '完整写目标、最后两个完整读窗口和保护区逐次校验；全部读 tile 的 oracle 属于独立 untimed 启动。',
+        '小工作集 / 128 MiB / 2 GiB 指每方向范围，使用默认 L2；HUGE_FIRST 可以回退，独立地址不能排除 bank / 通道竞争。']};
+  }
   if(family==='extent')return{
     params:[['测量 ID / 轮次',`${r.id} / ${r.round}`],['芯片 / CANN',`${db.environment.soc} / ${db.environment.cann}`],
       ['方向 / API',`${r.direction} / ${r.api}`],['AIV / dtype',`1 / ${r.dtype}`],

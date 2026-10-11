@@ -1,4 +1,5 @@
 import {mountPageRetest} from './page-retest.js';
+import {mountLatencyDuplex} from './latency-duplex.js';
 import {applyLabShell} from './lab-shell.js';
 import * as echarts from './chart-layout.js';
 import './mbench.css';
@@ -18,6 +19,7 @@ const fmt=(n,d=3)=>Number(n).toLocaleString('en-US',{minimumFractionDigits:d,max
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export async function mountMbench(initial){
+  if(initial==='latency-duplex')return mountLatencyDuplex();
   if(initial==='page-retest')return mountPageRetest();
   if(initial==='peer-copy')return mountPeerCopy();
   if(initial==='workset')return mountWorkset();

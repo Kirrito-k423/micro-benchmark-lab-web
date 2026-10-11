@@ -16,6 +16,7 @@ if(existsSync(new URL('../public/data/a5-workset.json',import.meta.url)))sets.pu
 if(existsSync(new URL('../public/data/a5-peer-copy.json',import.meta.url)))sets.push(['peer-copy','a5-peer-copy','rows']);
 if(existsSync(new URL('../public/data/a5-page-retest.json',import.meta.url)))sets.push(['page-retest','a5-page-retest','rows']);
 if(existsSync(new URL('../public/data/a5-extent.json',import.meta.url)))sets.push(['extent','a5-extent','rows']);
+if(existsSync(new URL('../public/data/a5-latency-duplex.json',import.meta.url)))sets.push(['latency-duplex','a5-latency-duplex','rows']);
 let points=0;
 for(const [family,name,key] of sets) {
   const db=read(name);
@@ -75,3 +76,17 @@ if(sets.some(([family])=>family==='extent')) {
   assert.equal(implementationContext('extent',{...row,payload:4*2**20,tileBytes:65536,tilesPerRequest:64},db).params.find(p=>p[0]==='每次 DMA tile / 每请求次数')[1],'65536 B / 64');
 }
 console.log(`${points} measurement rows bound; hashes, exact excerpts, historical kernels and stale/missing receipts checked.`);
+if(sets.some(([family])=>family==='latency-duplex')) {
+  const db=read('a5-latency-duplex');
+  for(const kind of ['latency','duplex']) {
+    const row=db.rows.find(r=>r.kind===kind&&!r.control);
+    assert.equal(measurementSource(catalog,'latency-duplex',{...row,binaryHash:'unknown'},db),null);
+    assert.equal(measurementSource(catalog,'latency-duplex',{...row,bindingKey:'missing'},db),null);
+    assert.equal(measurementSource(catalog,'latency-duplex',{...row,sourceCommit:'wrong'},db),null);
+    const wrong=structuredClone(db);wrong.evidence.sourceBindings[row.bindingKey].binaryHash='wrong';
+    assert.equal(measurementSource(catalog,'latency-duplex',row,wrong),null);
+    const bad=structuredClone(db);bad.evidence.sourceBindings[row.bindingKey].sources[`${kind}-kernel.cpp`]='wrong';
+    assert.equal(measurementSource(catalog,'latency-duplex',row,bad),null);
+    assert.ok(implementationContext('latency-duplex',row,db).timing.includes(kind==='latency'?'恰好一个完整请求':'trace-off'));
+  }
+}
