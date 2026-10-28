@@ -1,7 +1,7 @@
 // Static encrypted delivery. Keys and decrypted responses never enter Cache Storage.
 const sessions = new Map();
 const scope = new URL(self.registration.scope).pathname;
-const publicPaths = new Set(["","index.html",".nojekyll","access-public/entry-47BThSyP.js","access-public/index-hPjexdAr.css","access-public/access-runtime-BvEGl8Lx.js","access-config.json","access-worker.js"]);
+const publicPaths = new Set(["","index.html",".nojekyll","access-public/entry-CMWm1VL4.js","access-public/index-hPjexdAr.css","access-public/access-runtime-BvEGl8Lx.js","access-config.json","access-worker.js"]);
 async function recoverSession(clientId) {
   const documents=await self.clients.matchAll({type:'window'});
   documents.sort((a,b)=>Number(b.id===clientId)-Number(a.id===clientId));
